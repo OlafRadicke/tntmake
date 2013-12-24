@@ -7,21 +7,25 @@ class BuildJob
     ##
     # Constructor
     def initialize ( name_ )
-        @bulidName = name_
-        @buldFiles = Array.new
+        @buildName = name_
+        @buildFiles = Array.new
     end
 
     ##
     # Name des Build-Jobs
-    def getName ()
-        puts @bulidName
+    def getName()
+        return @buildName
     end
 
     ##
     # Datei hinzufühgen die eine Injection bekommen soll.
     def addbuildFile ( bulidFile_ )
-        @buldFiles.push(bulidFile_)
+        @buildFiles.push(bulidFile_)
 
+    end
+    
+    def getBuildFiles()
+        return @buildFiles
     end
 
 end
