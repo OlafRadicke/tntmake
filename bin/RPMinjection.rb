@@ -3,11 +3,9 @@
 require 'yaml'
 require 'mustache'
 require 'fileutils'
-require 'fileutils'
 
 
 # require "#{File.dirname(__FILE__)}/foo_class"
-load 'Substitute.rb'
 load 'BulidFile.rb'
 load 'BuildJob.rb'
 load 'getExampleConfigFile.rb'
@@ -23,7 +21,33 @@ class RPMinjection
     def initialize
         @buildList  = Array.new
         @buildDir = "./build"
+        @rpmName = ""
+        @versionNo = ""
     end
+    
+    ##
+    # Set RPM name
+    def setrpmName( name_ )
+        @rpmName = name_
+    end
+    
+    ##
+    # Get RPM name
+    def getrpmName( )
+        return @rpmName
+    end
+
+    ##
+    # Set versions no.
+    def setVersionNo( no_ )
+        @versionNo = no_
+    end
+    
+    ##
+    # Get versions no.
+    def getVersionNo( )
+        return @versionNo
+    end    
 
     ##
     # Einen neuen Build-Job hinzufühgen
@@ -53,7 +77,7 @@ class RPMinjection
                 puts "read: " + buildFile_.getPath()
                 file_ = File.open( buildFile_.getPath(), "rb")
                 fileContent_ = file_.read()
-                newPath_ = subdir_ + buildFile_.getPath()
+                newPath_ = subdir_ + "/" + buildFile_.getPath()
                         
                 dirname_ = File.dirname( newPath_ )
                 puts dirname_
@@ -62,17 +86,21 @@ class RPMinjection
                 # create directoris...
 
                 open( newPath_, 'w') do |f|
-                    # Testersetzungen....
+                    # Suchen und ersetzen....
                     f << Mustache.render(fileContent_ , buildFile_.getSubstitut())
                 end
             end
+            rpmname_ = self.getrpmName()
+            versionsno_ = self.getVersionNo()
             
+            # create rpm
+            system( "cd #{subdir_} && ls" )
+            system( "cd #{subdir_} && ls" )
+            system( "cd #{subdir_} && mv ./files ./#{rpmname_}-#{versionsno_}/" )
+            system( "cd #{subdir_} && tar -cvzf  ./#{rpmname_}-#{versionsno_}.tar.gz ./#{rpmname_}-#{versionsno_}/" )
+            system( "cd #{subdir_} && rpmbuild -vv -ta ./#{rpmname_}-#{versionsno_}.tar.gz" )
         end
-        # puts '====================================================='
-        # 
-        # puts '====================================================='
-        # puts Mustache.render("Hello {{planet}}! Hallo {{planet_de}}", :planet => "World!", :planet_de => "Welt!")
-        # puts '====================================================='
+
         
     end
         
@@ -95,8 +123,6 @@ end
 # Klasse "RPMinjection" generiert wird sieht man zwar nicht,
 # aber so ist das halt in Ruby...
 def loadConfig( filename_ )
-#     file = File.open( filename_, "rb")
-#     contents = file.read
 
     # Convert from YAML config file in to a RPMinjection class (so i hope!)
     rpmInjection =  YAML.load_file(filename_)
