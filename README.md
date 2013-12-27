@@ -10,9 +10,15 @@ Olaf Radicke <radicke@atix.de>
 
 GPLv3 oder höher.
 
-## TODOs ##
+## Installation ##
 
-* Die gesamte Geschäftslogik fehlt noch.
+Es gibt ein Makefile im Basisverzeichnis mit dem ein RPM erstellt werden kann:
+
+    make dist-rpm
+    
+Unterhalb von ~/rpmbuild/RPMS/noarch/ liegt dann eine Datei rpminjection-*.noarch.rpm Diese wird dann installiert mit:
+
+    rpm-i rpminjection-*.noarch.rpm
 
 ## Doku ##
 
