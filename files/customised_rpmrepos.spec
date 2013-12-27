@@ -1,10 +1,10 @@
-Name: customised_rpmrepos
+Name: customised_rpmrepos-{{TARGET_SYSTEM}}
 Summary: Add a yum repository with customised rpms.
 Version: {{VERSION}}
 Group: Server-Applications
 License: GPL
 Release: {{REALEASE}}
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-{{TARGET_SYSTEM}}-atix
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-atix
 BuildArch: noarch
 Source: %{name}-%{version}.tar.gz
 Vendor: ATIX AG
@@ -21,7 +21,7 @@ It is check the MAC address and the ip address.
 
 %install
 if [ ! -d $RPM_BUILD_ROOT/etc/yum.repos.d/ ] ; then  mkdir -p $RPM_BUILD_ROOT/etc/yum.repos.d/ ; fi;
-install  $RPM_BUILD_DIR/%{name}-%{version}/etc/yum.repos.d/hotfix/customised_rpms.repo $RPM_BUILD_ROOT/etc/yum.repos.d/customised_rpms.repo
+install  $RPM_BUILD_DIR/%{name}-%{version}/etc/yum.repos.d/customised_rpms.repo $RPM_BUILD_ROOT/etc/yum.repos.d/customised_rpms.repo
 
 %post
 

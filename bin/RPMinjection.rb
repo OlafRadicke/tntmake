@@ -92,13 +92,13 @@ class RPMinjection
             end
             rpmname_ = self.getrpmName()
             versionsno_ = self.getVersionNo()
-            
+            targetsystem_ = buildJob_.getName()
             # create rpm
             system( "cd #{subdir_} && ls" )
             system( "cd #{subdir_} && ls" )
-            system( "cd #{subdir_} && mv ./files ./#{rpmname_}-#{versionsno_}/" )
-            system( "cd #{subdir_} && tar -cvzf  ./#{rpmname_}-#{versionsno_}.tar.gz ./#{rpmname_}-#{versionsno_}/" )
-            system( "cd #{subdir_} && rpmbuild -vv -ta ./#{rpmname_}-#{versionsno_}.tar.gz" )
+            system( "cd #{subdir_} && mv ./files ./#{rpmname_}-#{targetsystem_}-#{versionsno_}/" )
+            system( "cd #{subdir_} && tar -cvzf  ./#{rpmname_}-#{targetsystem_}-#{versionsno_}.tar.gz ./#{rpmname_}-#{targetsystem_}-#{versionsno_}/" )
+            system( "cd #{subdir_} && rpmbuild -vv -ta ./#{rpmname_}-#{targetsystem_}-#{versionsno_}.tar.gz" )
         end
 
         

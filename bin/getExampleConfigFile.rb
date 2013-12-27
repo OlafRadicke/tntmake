@@ -10,7 +10,7 @@ def getExampleConfigFile ()
     
     #======== assemblyhall ======== 
     # new file
-    buildfile_1 = BulidFile.new('files/etc/yum.repos.d/customised_rpms.repo.template')
+    buildfile_1 = BulidFile.new('files/etc/yum.repos.d/customised_rpms.repo')
     # values...
     buildfile_1.addSubstitut( "SERVER-IP", "192.168.5.146" )
     buildfile_1.addSubstitut("TARGET_SYSTEM", "assemblyhall")
@@ -31,7 +31,7 @@ def getExampleConfigFile ()
     
     #======== intigration ======== 
     # new file
-    buildfile_2 = BulidFile.new('files/etc/yum.repos.d/customised_rpms.repo.template')
+    buildfile_2 = BulidFile.new('files/etc/yum.repos.d/customised_rpms.repo')
     # values...
     buildfile_2.addSubstitut("SERVER-IP", "168.192.3.3")
     buildfile_2.addSubstitut("TARGET_SYSTEM", "intigration")
@@ -52,7 +52,7 @@ def getExampleConfigFile ()
 
     #======== hotfix ======== 
     # new file
-    buildfile_3 = BulidFile.new('files/etc/yum.repos.d/customised_rpms.repo.template')
+    buildfile_3 = BulidFile.new('files/etc/yum.repos.d/customised_rpms.repo')
     # values...
     buildfile_3.addSubstitut("SERVER-IP", "168.192.3.3")
     buildfile_3.addSubstitut("TARGET_SYSTEM", "hotfix")
@@ -73,7 +73,7 @@ def getExampleConfigFile ()
     
     #======== qa ======== 
     # new file
-    buildfile_4 = BulidFile.new('files/etc/yum.repos.d/customised_rpms.repo.template')
+    buildfile_4 = BulidFile.new('files/etc/yum.repos.d/customised_rpms.repo')
     # values...
     buildfile_4.addSubstitut("SERVER-IP", "168.192.3.3")
     buildfile_4.addSubstitut("TARGET_SYSTEM", "qa")
@@ -94,7 +94,7 @@ def getExampleConfigFile ()
     
     #======== preview ======== 
     # new file
-    buildfile_5 = BulidFile.new('files/etc/yum.repos.d/customised_rpms.repo.template')
+    buildfile_5 = BulidFile.new('files/etc/yum.repos.d/customised_rpms.repo')
     # values...
     buildfile_5.addSubstitut("SERVER-IP", "168.192.3.3")
     buildfile_5.addSubstitut("TARGET_SYSTEM", "vorschau")
@@ -115,7 +115,7 @@ def getExampleConfigFile ()
 
     #======== qaa ======== 
     # new file
-    buildfile_6 = BulidFile.new('files/etc/yum.repos.d/customised_rpms.repo.template')
+    buildfile_6 = BulidFile.new('files/etc/yum.repos.d/customised_rpms.repo')
     # values...
     buildfile_6.addSubstitut("SERVER-IP", "168.192.3.3")
     buildfile_6.addSubstitut("TARGET_SYSTEM", "qaa")
