@@ -1,2 +1,2 @@
 #!/bin/bash
-/usr/bin/ruby -I./bin/ ./bin/RPMinjection.rb $* #./test-files/customised-rpm-repo.conf
+/usr/bin/ruby -I./usr/lib/rpminjection/ /usr/lib/rpminjection/RPMinjection.rb $* #./test-files/customised-rpm-repo.conf
