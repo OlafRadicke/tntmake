@@ -89,43 +89,39 @@ class MakeRules
 
 
     ##
-    # Wird spähter mal die Jobs abarbeiten und die RPM-Injection
-    # machen
+    # This function create the autotool files
     def run()
         self.cleanBuildDir()
-        @buildList.each do | buildJob_ |
-            subdir_ = @buildDir + "/" + buildJob_.getName()
-            puts "Create: " + subdir_
-            Dir.mkdir( subdir_, 0700)
-            buildFilesList_ = buildJob_.getBuildFiles()
-            buildFilesList_.each do | buildFile_ |
-                puts "read: " + buildFile_.getPath()
-                file_ = File.open( buildFile_.getPath(), "rb")
-                fileContent_ = file_.read()
-                newPath_ = subdir_ + "/" + buildFile_.getPath()
 
-                dirname_ = File.dirname( newPath_ )
-                puts dirname_
-                FileUtils.mkpath(dirname_)
+        # ./configure.ac.template
+        substituts_1 = Hash.new(0)
+        substituts["EMAILADRESS"] = @email
+        puts "read: resources/configure.ac.template"
+        file_ = File.open( "resources/configure.ac.template", "rb")
+        fileContent_ = file_.read()
+        # create ./configure.ac and
+        # Suchen und ersetzen....
+        "./configure.ac" << Mustache.render(fileContent_ , substituts_1)
 
-                # create directoris...
 
-                open( newPath_, 'w') do |f|
-                    # Suchen und ersetzen....
-                    f << Mustache.render(fileContent_ , buildFile_.getSubstitut())
-                end
-            end
-            rpmname_ = self.getrpmName()
-            versionsno_ = self.getVersionNo()
-            targetsystem_ = buildJob_.getName()
-            # create rpm
-            system( "cd #{subdir_} && ls" )
-            system( "cd #{subdir_} && ls" )
-            system( "cd #{subdir_} && mv ./files ./#{rpmname_}-#{targetsystem_}-#{versionsno_}/" )
-            system( "cd #{subdir_} && tar -cvzf  ./#{rpmname_}-#{targetsystem_}-#{versionsno_}.tar.gz ./#{rpmname_}-#{targetsystem_}-#{versionsno_}/" )
-            system( "cd #{subdir_} && rpmbuild -vv -ta ./#{rpmname_}-#{targetsystem_}-#{versionsno_}.tar.gz" )
-        end
+        # ./Makefile.am.template
+        substituts_2 = Hash.new(0)
+        puts "read: resources/Makefile.am.template"
+        file_ = File.open( "resources/Makefile.am.template", "rb")
+        fileContent_ = file_.read()
+        # create ./configure.ac and
+        # Suchen und ersetzen....
+        "./Makefile.am" << Mustache.render(fileContent_ , substituts_2)
 
+
+        # ./SubMakefile.am.template
+        substituts_3 = Hash.new(0)
+        puts "read: resources/SubMakefile.am.template"
+        file_ = File.open( "resources/SubMakefile.am.template", "rb")
+        fileContent_ = file_.read()
+        # create ./src/Makefile.am and
+        # Suchen und ersetzen....
+        "./src/Makefile.am" << Mustache.render(fileContent_ , substituts_3)
 
     end
 
