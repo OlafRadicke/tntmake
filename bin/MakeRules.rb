@@ -6,48 +6,79 @@ require 'fileutils'
 
 
 # require "#{File.dirname(__FILE__)}/foo_class"
-load 'BulidFile.rb'
-load 'BuildJob.rb'
-load 'getExampleConfigFile.rb'
 
 
 ##
-# Repräsentiert die Geschäftslogik
-class RPMinjection
+# Repräsentiert die Build-Konfiguration
+class MakeRules
 
-    
+    attr_accessor :binName,
+        :hFiles,
+        :cppFiles,
+        :ecppFiles,
+        :resourcesFiles,
+        :thirdpartlibs,
+        :tntdbsupport,
+        :standalone,
+        :buildDir,
+        :email
+
     ##
     # Der Constructor der bei Ruby nicht Constructor heißt.
     def initialize
-        @buildList  = Array.new
+        ## Name of excitable file
+        @binName = ""
+
+        ## List of header files
+        @hFiles  = Array.new
+
+        ## add a file in the header files list
+        def addhFile( new_hFile )
+            @hFiles.push( new_hFile )
+        end
+
+        ## List of *.cpp files
+        @cppFiles  = Array.new
+
+        ## add a file in the list of *.cpp files
+        def addcppFiles( new_cppFiles )
+            @cppFiles.push( new_cppFiles )
+        end
+
+        ## List of *.ecpp files
+        @ecppFiles  = Array.new
+
+        ## add a file in the list of *.ecpp files
+        def addecppFiles( new_ecppFiles )
+            @ecppFiles.push( new_ecppFiles )
+        end
+
+        ## List of resource files. CSS, pics and so one.
+        @resourcesFiles  = Array.new
+
+        ## add a file in the list of *.ecpp files
+        def addresourcesFiles( new_resourcesFiles )
+            @resourcesFiles.push( new_resourcesFiles )
+        end
+
+        ## Complier flags for third part libs
+        @thirdpartlibs = ""
+
+        ## tntbd support switch
+        @tntdbsupport = true
+
+        ## standalone application y/n
+        @standalone = true
+
+        ## Build directoy name
         @buildDir = "./build"
-        @rpmName = ""
-        @versionNo = ""
-    end
-    
-    ##
-    # Set RPM name
-    def setrpmName( name_ )
-        @rpmName = name_
-    end
-    
-    ##
-    # Get RPM name
-    def getrpmName( )
-        return @rpmName
+
+        ## email address
+        @email = ""
+
     end
 
-    ##
-    # Set versions no.
-    def setVersionNo( no_ )
-        @versionNo = no_
-    end
-    
-    ##
-    # Get versions no.
-    def getVersionNo( )
-        return @versionNo
-    end    
+
 
     ##
     # Einen neuen Build-Job hinzufühgen
@@ -55,13 +86,7 @@ class RPMinjection
         @buildList.push(job_)
     end
 
-    ##
-    # Gibt eine Liste der Namen der Bild-jobs zurück
-    def getBuildList()
-        @buildList.each do |thing|
-            puts thing.getName()
-        end
-    end
+
 
     ##
     # Wird spähter mal die Jobs abarbeiten und die RPM-Injection
@@ -78,7 +103,7 @@ class RPMinjection
                 file_ = File.open( buildFile_.getPath(), "rb")
                 fileContent_ = file_.read()
                 newPath_ = subdir_ + "/" + buildFile_.getPath()
-                        
+
                 dirname_ = File.dirname( newPath_ )
                 puts dirname_
                 FileUtils.mkpath(dirname_)
@@ -101,54 +126,17 @@ class RPMinjection
             system( "cd #{subdir_} && rpmbuild -vv -ta ./#{rpmname_}-#{targetsystem_}-#{versionsno_}.tar.gz" )
         end
 
-        
+
     end
-        
+
     def cleanBuildDir()
         if File.directory?(@buildDir)
             FileUtils.rm_rf(@buildDir)
             Dir.mkdir(@buildDir, 0700)
         else
             Dir.mkdir(@buildDir, 0700)
-        end        
-        
-    end
-
-end
-
-
-##
-# Liest eine Konfiguration ein und inizialisiert
-# damit die Klasse RPMinjection. Das hier ein Objekt der
-# Klasse "RPMinjection" generiert wird sieht man zwar nicht,
-# aber so ist das halt in Ruby...
-def loadConfig( filename_ )
-
-    # Convert from YAML config file in to a RPMinjection class (so i hope!)
-    rpmInjection =  YAML.load_file(filename_)
-    puts rpmInjection.class.name
-    rpmInjection.run()
-    
-end
-
-
-##
-# Billiger Komandozeilenparser. Geht bestimmt besser. 
-# Aber erst mal soll es reichen.
-def argParse()
-    ARGV.each do|a|
-        if a == "--example" || a == "-e"
-            puts getExampleConfigFile()
-        elsif a == "--selftest" || a == "-t"
-            rpmInjection =  YAML::load( getExampleConfigFile() )
-            puts rpmInjection.class.name
-        else
-            loadConfig( a )
         end
+
     end
-end  
 
-argParse()
-
-
-
+end

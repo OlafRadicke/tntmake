@@ -1,21 +1,21 @@
-Name: rpminjection
-Summary: Zum manipulieren von rpmbuilds.
+Name: tntmake
+Summary: Create a autotool based build system for tntnet projects.
 Version: 1
 Group: develop
 License: GPL
 Release: 1
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-atix
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-olaf
 BuildArch: noarch
 Source: %{name}-%{version}.tar.gz
-Vendor: ATIX AG
-Packager: ATIX AG technik@atix.de
+Vendor: Olaf Radicke
+Packager: Olaf Radicke briefkasten@olaf-radicke.de
 
 %description
-Das tool unterstützt dabei, RPMs indivieduell für Zielsysteme anzupassen.
+Create a autotool based build system for tntnet projects.
 
 
 %prep
-%setup 
+%setup
 
 %build
 

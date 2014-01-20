@@ -1,13 +1,13 @@
 VERSION=1
-RPMNAME=rpminjection
+RPMNAME=tntmake
 
-clean: 
+clean:
 	rm -Rvf ./$(RPMNAME)-$(VERSION)/
-	
-dist-tar: 
+
+dist-tar:
 	tar -cvzf  ./$(RPMNAME)-$(VERSION).tar.gz ./$(RPMNAME)-$(VERSION)/
 
-dirbuild: 
+dirbuild:
 	if [ ! -d ./$(RPMNAME)-$(VERSION)/bin/ ] ; then  mkdir -p ./$(RPMNAME)-$(VERSION)/bin/ ; fi;
 	cp ./bin/*.rb  ./$(RPMNAME)-$(VERSION)/bin/
 	cp ./rpminjection ./$(RPMNAME)-$(VERSION)/bin/
@@ -17,6 +17,6 @@ dirbuild:
 dist-rpm: dirbuild dist-tar
 	rm -Rvf  ~/rpmbuild/*
 	mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-	rpmbuild -vv -ta ./$(RPMNAME)-$(VERSION).tar.gz	
-	
-	
+	rpmbuild -vv -ta ./$(RPMNAME)-$(VERSION).tar.gz
+
+
