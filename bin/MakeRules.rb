@@ -17,6 +17,7 @@ class MakeRules
         :cppFiles,
         :ecppFiles,
         :resourcesFiles,
+        :extreDist,
         :thirdpartlibs,
         :tntdbsupport,
         :standalone,
@@ -56,9 +57,17 @@ class MakeRules
         ## List of resource files. CSS, pics and so one.
         @resourcesFiles  = Array.new
 
-        ## add a file in the list of *.ecpp files
+        ## add a file in the list of CSS, pics and so one files
         def addresourcesFiles( new_resourcesFiles )
             @resourcesFiles.push( new_resourcesFiles )
+        end
+
+        ## List of extra files. Config examples, docus.
+        @extreDist  = Array.new
+
+        ## add a file in the list of extra files files
+        def addExtreDistFiles( new_extreDist )
+            @extreDist.push( new_extreDist )
         end
 
         ## Complier flags for third part libs
@@ -78,61 +87,5 @@ class MakeRules
 
     end
 
-
-
-    ##
-    # Einen neuen Build-Job hinzufühgen
-    def addJob( job_ )
-        @buildList.push(job_)
-    end
-
-
-
-    ##
-    # This function create the autotool files
-    def run()
-        self.cleanBuildDir()
-
-        # ./configure.ac.template
-        substituts_1 = Hash.new(0)
-        substituts["EMAILADRESS"] = @email
-        puts "read: resources/configure.ac.template"
-        file_ = File.open( "resources/configure.ac.template", "rb")
-        fileContent_ = file_.read()
-        # create ./configure.ac and
-        # Suchen und ersetzen....
-        "./configure.ac" << Mustache.render(fileContent_ , substituts_1)
-
-
-        # ./Makefile.am.template
-        substituts_2 = Hash.new(0)
-        puts "read: resources/Makefile.am.template"
-        file_ = File.open( "resources/Makefile.am.template", "rb")
-        fileContent_ = file_.read()
-        # create ./configure.ac and
-        # Suchen und ersetzen....
-        "./Makefile.am" << Mustache.render(fileContent_ , substituts_2)
-
-
-        # ./SubMakefile.am.template
-        substituts_3 = Hash.new(0)
-        puts "read: resources/SubMakefile.am.template"
-        file_ = File.open( "resources/SubMakefile.am.template", "rb")
-        fileContent_ = file_.read()
-        # create ./src/Makefile.am and
-        # Suchen und ersetzen....
-        "./src/Makefile.am" << Mustache.render(fileContent_ , substituts_3)
-
-    end
-
-    def cleanBuildDir()
-        if File.directory?(@buildDir)
-            FileUtils.rm_rf(@buildDir)
-            Dir.mkdir(@buildDir, 0700)
-        else
-            Dir.mkdir(@buildDir, 0700)
-        end
-
-    end
 
 end

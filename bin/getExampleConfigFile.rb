@@ -26,7 +26,5 @@ def getExampleConfigFile ()
     makeRules.buildDir="bulid_1"
     makeRules.email="maintainer@nix.org"
 
-
-
     return YAML.dump(makeRules)
 end

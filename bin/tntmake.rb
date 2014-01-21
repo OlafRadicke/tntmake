@@ -8,6 +8,7 @@ require 'fileutils'
 # require "#{File.dirname(__FILE__)}/foo_class"
 load 'getExampleConfigFile.rb'
 load 'MakeRules.rb'
+load 'TNTMake.rb'
 
 
 ##
@@ -15,12 +16,13 @@ load 'MakeRules.rb'
 # damit die Klasse MakeRules. Das hier ein Objekt der
 # Klasse "MakeRules" generiert wird sieht man zwar nicht,
 # aber so ist das halt in Ruby...
-def loadConfig( filename_ )
+def createAutoConf( _tntmakefileName )
 
     # Convert from YAML config file in to a MakeRules class (so i hope!)
-    rpmInjection =  YAML.load_file(filename_)
-    puts rpmInjection.class.name
-    rpmInjection.run()
+    makeRules =  YAML.load_file( _tntmakefileName )
+    tntmake = TNTMake.new()
+    tntmake.rules=makeRules
+    tntmake.createAutoConf()
 
 end
 
@@ -32,11 +34,11 @@ def argParse()
     ARGV.each do|a|
         if a == "--example" || a == "-e"
             puts getExampleConfigFile()
-        elsif a == "--selftest" || a == "-t"
-            rpmInjection =  YAML::load( getExampleConfigFile() )
-            puts rpmInjection.class.name
+        elsif a == "--clean" || a == "-c"
+            tntmake = TNTMake.new()
+            tntmake.clean()
         else
-            loadConfig( a )
+            createAutoConf( a )
         end
     end
 end
