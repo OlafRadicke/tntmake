@@ -20,6 +20,8 @@ def getExampleConfigFile ()
     makeRules.addresourcesFiles( "src/resource/image_2.jpg")
     makeRules.addresourcesFiles( "src/resource/image_3.jpg")
     makeRules.addresourcesFiles( "src/resource/style.css")
+    makeRules.addExtreDistFiles( "README.md")
+    makeRules.addExtreDistFiles( "sql/example.sql")
     makeRules.thirdpartlibs="-boost"
     makeRules.tntdbsupport="y"
     makeRules.standalone="y"

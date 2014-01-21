@@ -1,11 +1,13 @@
 #!/usr/bin/ruby -w
 
+
 require 'yaml'
 require 'mustache'
 require 'fileutils'
 
 
 # require "#{File.dirname(__FILE__)}/foo_class"
+#load "#{File.dirname(__FILE__)}/getExampleConfigFile.rb"
 load 'getExampleConfigFile.rb'
 load 'MakeRules.rb'
 load 'TNTMake.rb'
