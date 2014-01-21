@@ -5,13 +5,12 @@ clean:
 	rm -Rvf ./$(RPMNAME)-$(VERSION)/
 
 dist-tar:
-	tar -cvzf  ./$(RPMNAME)-$(VERSION).tar.gz ./$(RPMNAME)-$(VERSION)/
+	tar -cvzf  $(RPMNAME)-$(VERSION).tar.gz $(RPMNAME)-$(VERSION)/
 
 dirbuild:
 	if [ ! -d ./$(RPMNAME)-$(VERSION)/bin/ ] ; then  mkdir -p ./$(RPMNAME)-$(VERSION)/bin/ ; fi;
-	cp ./bin/*.rb  ./$(RPMNAME)-$(VERSION)/bin/
-	cp ./rpminjection ./$(RPMNAME)-$(VERSION)/bin/
-	cp ./bin/rpminjection.spec ./$(RPMNAME)-$(VERSION)/
+	cp -R ./bin/*  ./$(RPMNAME)-$(VERSION)/bin/
+	cp ./bin/tntmake.spec ./$(RPMNAME)-$(VERSION)/
 
 
 dist-rpm: dirbuild dist-tar
