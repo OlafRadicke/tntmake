@@ -10,7 +10,7 @@ require 'fileutils'
 # Make processor
 class TNTMake
 
-    @rules
+#     @rules
 
     def rules=( _newRules )
         @rules=_newRules
@@ -24,7 +24,7 @@ class TNTMake
         substituts_1 = Hash.new(0)
         substituts_1["EMAILADRESS"] = @rules.email
         puts "read: resources/configure.ac.template"
-        file_ = File.open( "resources/configure.ac.template", "rb")
+        file_ = File.open( "#{File.dirname(__FILE__)}/resources/configure.ac.template", "rb")
         fileContent_ = file_.read()
         # create ./configure.ac and
         # Suchen und ersetzen....
@@ -33,9 +33,9 @@ class TNTMake
 
         # ./Makefile.am.template
         substituts_2 = Hash.new(0)
-        substituts_2["EXTRA_DIST"] = @rules.addExtreDistFiles.join("\n")
+        substituts_2["EXTRA_DIST"] = @rules.extreDist.join("\n")
         puts "read: resources/Makefile.am.template"
-        file_ = File.open( "resources/Makefile.am.template", "rb")
+        file_ = File.open( "#{File.dirname(__FILE__)}/resources/Makefile.am.template", "rb")
         fileContent_ = file_.read()
         # create ./configure.ac and
         # Suchen und ersetzen....
@@ -45,13 +45,13 @@ class TNTMake
         # ./SubMakefile.am.template
         substituts_3 = Hash.new(0)
         substituts_3["BINFILE"] = @rules.binName
-        substituts_3["EXTRA_DIST"] = @rules.addExtreDistFiles.join("\\\n")
+        substituts_3["EXTRA_DIST"] = @rules.extreDist.join("\\\n")
         substituts_3["HEADERS"] = @rules.hFiles.join("\\\n")
         substituts_3["ECPPFILES"] = @rules.ecppFiles.join("\\\n")
         substituts_3["RESOURCES"] = @rules.resourcesFiles.join("\\\n")
         substituts_3["CPPFILES"] = @rules.cppFiles.join("\\\n")
         puts "read: resources/SubMakefile.am.template"
-        file_ = File.open( "resources/SubMakefile.am.template", "rb")
+        file_ = File.open( "#{File.dirname(__FILE__)}/resources/SubMakefile.am.template", "rb")
         fileContent_ = file_.read()
         # create ./src/Makefile.am and
         # Suchen und ersetzen....
