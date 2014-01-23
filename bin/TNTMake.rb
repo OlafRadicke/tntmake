@@ -56,6 +56,12 @@ class TNTMake
         # create ./src/Makefile.am and
         # Suchen und ersetzen....
         "./src/Makefile.am" << Mustache.render(fileContent_ , substituts_3)
+        puts  Mustache.render(fileContent_ , substituts_3)
+
+    end
+
+    def scanSourceDirs()
+        fileList = `find ./ -name '*.cpp`
 
     end
 

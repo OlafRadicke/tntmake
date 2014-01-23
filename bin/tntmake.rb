@@ -32,6 +32,16 @@ end
 ##
 # Billiger Komandozeilenparser. Geht bestimmt besser.
 # Aber erst mal soll es reichen.
+#
+# --example -e
+#    Create a simple make file and write this on standard output.
+#
+# --scan -s
+#     Same like "-e" but it is scanning all directories and collecting
+#     information about the project.
+# --clean -c
+#     clean up generated files
+#
 def argParse()
     ARGV.each do|a|
         if a == "--example" || a == "-e"
@@ -39,6 +49,9 @@ def argParse()
         elsif a == "--clean" || a == "-c"
             tntmake = TNTMake.new()
             tntmake.clean()
+        elsif a == "--scan" || a == "-s"
+            tntmake = TNTMake.new()
+            tntmake.scanSourceDirs()
         else
             createAutoConf( a )
         end

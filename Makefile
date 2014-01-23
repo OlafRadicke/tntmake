@@ -5,7 +5,7 @@ clean:
 	rm -Rvf ./$(RPMNAME)-$(VERSION)/
 
 dist-tar:
-	tar -cvzf  $(RPMNAME)-$(VERSION).tar.gz $(RPMNAME)-$(VERSION)/
+	tar -cvzf  ~/rpmbuild/SOURCES/$(RPMNAME)-$(VERSION).tar.gz $(RPMNAME)-$(VERSION)/
 
 dirbuild:
 	if [ ! -d ./$(RPMNAME)-$(VERSION)/bin/ ] ; then  mkdir -p ./$(RPMNAME)-$(VERSION)/bin/ ; fi;
@@ -14,9 +14,10 @@ dirbuild:
 
 
 dist-rpm: dirbuild dist-tar
-	rm -Rvf  ~/rpmbuild/*
+#	rm -Rvf  ~/rpmbuild/*
 	mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-	rpmbuild -vv -ta ./$(RPMNAME)-$(VERSION).tar.gz
+#	rpmbuild -vv -ta ./$(RPMNAME)-$(VERSION).tar.gz
+	rpmbuild -vv -bb ./bin/tntmake.spec
 
 
 install:
