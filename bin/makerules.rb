@@ -33,6 +33,10 @@ class MakeRules
         ## List of header files
         @hFiles  = Array.new
 
+        def hFiles=( _new )
+            @hFiles  = _new
+        end
+
         ## add a file in the header files list
         def addhFile( new_hFile )
             @hFiles.push( new_hFile )

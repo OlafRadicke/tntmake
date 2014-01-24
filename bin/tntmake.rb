@@ -6,24 +6,9 @@ require 'mustache'
 require 'fileutils'
 
 
-require File.dirname(__FILE__) + "/getexampleconfigfile.rb"
+# require File.dirname(__FILE__) + "/getexampleconfigfile.rb"
 require File.dirname(__FILE__) + "/makerules.rb"
 require File.dirname(__FILE__) + "/tntmakemanager.rb"
-
-##
-# Liest eine Konfiguration ein und inizialisiert
-# damit die Klasse MakeRules. Das hier ein Objekt der
-# Klasse "MakeRules" generiert wird sieht man zwar nicht,
-# aber so ist das halt in Ruby...
-def createAutoConf( _tntmakefileName )
-
-    # Convert from YAML config file in to a MakeRules class (so i hope!)
-    makeRules =  YAML.load_file( _tntmakefileName )
-    tntmakeManager = TNTMakeManager.new()
-    tntmakeManager.rules=makeRules
-    tntmakeManager.createAutoConf()
-
-end
 
 
 ##
@@ -35,15 +20,21 @@ end
 #
 # --scan -s
 #     Same like "-e" but it is scanning all directories and collecting
-#     information about the project.
+#     information about the project. After then write the yaml code on standard
+#     output.
 #
 # --clean -c
-#     clean up generated files
+#     clean up generated files in the build directory.
+#
+# tntmake [Makefile.tnt]
+#     it is reading the yaml makefile of tntmake and generated the autotools
+#     files.
 #
 def argParse()
     ARGV.each do|a|
         if a == "--example" || a == "-e"
-            puts getExampleConfigFile()
+            tntmakeManager = TNTMakeManager.new()
+            puts tntmakeManager.getExampleConfigFile()
         elsif a == "--clean" || a == "-c"
             tntmakeManager = TNTMakeManager.new()
             tntmakeManager.clean()
@@ -51,7 +42,14 @@ def argParse()
             tntmakeManager = TNTMakeManager.new()
             puts tntmakeManager.scanSourceDirs()
         else
-            createAutoConf( a )
+            # Convert from YAML config file in to a MakeRules class (so i hope!)
+            makeRules =  YAML.load_file( a )
+            puts "#########################################################"
+            puts makeRules.binName
+            puts "#########################################################"
+            tntmakeManager = TNTMakeManager.new()
+            tntmakeManager.rules=makeRules
+            tntmakeManager.createAutoConf()
         end
     end
 end
