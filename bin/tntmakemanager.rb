@@ -27,19 +27,16 @@ class TNTMakeManager
         fileContent_ = file_.read()
         # create ./configure.ac and
         # Suchen und ersetzen....
-#         "./configure.ac" << Mustache.render(fileContent_ , substituts_1)
         File.write('./configure.ac', Mustache.render(fileContent_ , substituts_1) )
 
 
         # ./Makefile.am.template
         substituts_2 = Hash.new(0)
         substituts_2["EXTRA_DIST"] = @rules.extreDist.join("\n")
-        puts "read: resources/Makefile.am.template"
         file_ = File.open( "#{File.dirname(__FILE__)}/resources/Makefile.am.template", "rb")
         fileContent_ = file_.read()
         # create ./configure.ac and
         # Suchen und ersetzen....
-#         "./Makefile.am" << Mustache.render(fileContent_ , substituts_2)
         File.write('./Makefile.am', Mustache.render(fileContent_ , substituts_2) )
 
 
@@ -48,19 +45,13 @@ class TNTMakeManager
         substituts_3["BINFILE"] = @rules.binName
         substituts_3["EXTRA_DIST"] = @rules.extreDist.join("\\\n")
         substituts_3["HEADERS"] = @rules.hFiles.join("\\\n")
-        puts "######################################"
-        puts @rules.hFiles.join("\\\n")
-        puts "######################################"
         substituts_3["ECPPFILES"] = @rules.ecppFiles.join("\\\n")
         substituts_3["RESOURCES"] = @rules.resourcesFiles.join("\\\n")
         substituts_3["CPPFILES"] = @rules.cppFiles.join("\\\n")
-        puts "read: resources/SubMakefile.am.template"
         file_ = File.open( "#{File.dirname(__FILE__)}/resources/SubMakefile.am.template", "rb")
         fileContent_ = file_.read()
         # create ./src/Makefile.am and
         # Suchen und ersetzen....
-#         "./src/Makefile.am" << Mustache.render(fileContent_ , substituts_3)
-#         puts  Mustache.render(fileContent_ , substituts_3)
         File.write('./src/Makefile.am', Mustache.render(fileContent_ , substituts_3) )
 
     end
@@ -115,13 +106,14 @@ class TNTMakeManager
             makeRules.addcppFiles( fileName_2 )
         end
 
-        fileList_3 = `find ./ -name '*.eccp'`
+        fileList_3 = `find ./ -name '*.ecpp'`
         for fileName_3 in fileList_3.split("\n")
 #             puts fileName_3
             makeRules.addecppFiles( fileName_3 )
         end
 
-        fileList_3 = `find ./ -name 'src*resource.*'`
+#         fileList_3 = `find ./ -name 'src*resource.*'`
+        fileList_3 = `find \`find ./ -name '*resource*'\` -type f`
         for fileName_3 in fileList_3.split("\n")
             makeRules.addresourcesFiles( fileName_3 )
         end

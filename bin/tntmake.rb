@@ -44,9 +44,6 @@ def argParse()
         else
             # Convert from YAML config file in to a MakeRules class (so i hope!)
             makeRules =  YAML.load_file( a )
-            puts "#########################################################"
-            puts makeRules.binName
-            puts "#########################################################"
             tntmakeManager = TNTMakeManager.new()
             tntmakeManager.rules=makeRules
             tntmakeManager.createAutoConf()
