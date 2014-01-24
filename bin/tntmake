@@ -1,4 +1,3 @@
 #!/bin/bash
-#/usr/bin/ruby -I /usr/lib/tntmake/ /usr/lib/tntmake/tntmake.rb $*
-/usr/bin/ruby -W level=2 /usr/lib/tntmake/tntmake.rb $*
-#./test-files/customised-rpm-repo.conf
+# /usr/bin/ruby -W level=2 /usr/lib/tntmake/tntmake.rb $*
+/usr/bin/ruby -W /usr/lib/tntmake/tntmake.rb $*

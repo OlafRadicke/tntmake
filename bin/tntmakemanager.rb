@@ -8,7 +8,7 @@ require 'fileutils'
 
 ##
 # Make processor
-class TNTMake
+class TNTMakeManager
 
 #     @rules
 

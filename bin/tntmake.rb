@@ -6,9 +6,9 @@ require 'mustache'
 require 'fileutils'
 
 
-require File.dirname(__FILE__) + "/getExampleConfigFile.rb"
-require File.dirname(__FILE__) + "/MakeRules.rb"
-require File.dirname(__FILE__) + "/TNTMake.rb"
+require File.dirname(__FILE__) + "/getexampleconfigfile.rb"
+require File.dirname(__FILE__) + "/makerules.rb"
+require File.dirname(__FILE__) + "/tntmakemanager.rb"
 
 ##
 # Liest eine Konfiguration ein und inizialisiert
@@ -19,7 +19,7 @@ def createAutoConf( _tntmakefileName )
 
     # Convert from YAML config file in to a MakeRules class (so i hope!)
     makeRules =  YAML.load_file( _tntmakefileName )
-    tntmake = TNTMake.new()
+    tntmake = TNTMakeManager.new()
     tntmake.rules=makeRules
     tntmake.createAutoConf()
 
@@ -44,10 +44,10 @@ def argParse()
         if a == "--example" || a == "-e"
             puts getExampleConfigFile()
         elsif a == "--clean" || a == "-c"
-            tntmake = TNTMake.new()
+            tntmake = TNTMakeManager.new()
             tntmake.clean()
         elsif a == "--scan" || a == "-s"
-            tntmake = TNTMake.new()
+            tntmake = TNTMakeManager.new()
             tntmake.scanSourceDirs()
         else
             createAutoConf( a )
