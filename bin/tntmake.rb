@@ -19,9 +19,9 @@ def createAutoConf( _tntmakefileName )
 
     # Convert from YAML config file in to a MakeRules class (so i hope!)
     makeRules =  YAML.load_file( _tntmakefileName )
-    tntmake = TNTMakeManager.new()
-    tntmake.rules=makeRules
-    tntmake.createAutoConf()
+    tntmakeManager = TNTMakeManager.new()
+    tntmakeManager.rules=makeRules
+    tntmakeManager.createAutoConf()
 
 end
 
@@ -36,6 +36,7 @@ end
 # --scan -s
 #     Same like "-e" but it is scanning all directories and collecting
 #     information about the project.
+#
 # --clean -c
 #     clean up generated files
 #
@@ -44,11 +45,11 @@ def argParse()
         if a == "--example" || a == "-e"
             puts getExampleConfigFile()
         elsif a == "--clean" || a == "-c"
-            tntmake = TNTMakeManager.new()
-            tntmake.clean()
+            tntmakeManager = TNTMakeManager.new()
+            tntmakeManager.clean()
         elsif a == "--scan" || a == "-s"
-            tntmake = TNTMakeManager.new()
-            tntmake.scanSourceDirs()
+            tntmakeManager = TNTMakeManager.new()
+            puts tntmakeManager.scanSourceDirs()
         else
             createAutoConf( a )
         end
