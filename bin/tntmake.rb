@@ -6,12 +6,9 @@ require 'mustache'
 require 'fileutils'
 
 
-# require "#{File.dirname(__FILE__)}/foo_class"
-#load "#{File.dirname(__FILE__)}/getExampleConfigFile.rb"
-load 'getExampleConfigFile.rb'
-load 'MakeRules.rb'
-load 'TNTMake.rb'
-
+require File.dirname(__FILE__) + "/getExampleConfigFile.rb"
+require File.dirname(__FILE__) + "/MakeRules.rb"
+require File.dirname(__FILE__) + "/TNTMake.rb"
 
 ##
 # Liest eine Konfiguration ein und inizialisiert
