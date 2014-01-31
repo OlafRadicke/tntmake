@@ -37,24 +37,24 @@ class MakeRules
     def initialize
 
         ## path to c++ compiler
-        @cppCompiler = ""
+        @cppCompiler = "g++"
 
         @cppFlags = "-c -I ./src"
 
-        @ecppFlags = "-I ./src"
+        @ecppFlags = "-I./src"
 
         ## path to ecpp file comiler
-        @ecppCompiler = ""
+        @ecppCompiler = "ecppc"
 
         ## Name of excitable file
-        @binName = ""
+        @binName = "helloweld"
 
 #         def binName=(newValue_)
 #             @binName = newValue_
 #         end
 
         ## Project name
-        @projectName = ""
+        @projectName = "helloweld"
 
 #         def projectName=(newValue_)
 #             @projectName = newValue_
@@ -68,7 +68,7 @@ class MakeRules
 #         end
 
         ## TARBALLNAME
-        @tarballName = ""
+        @tarballName = "helloweld"
 
 #         def tarballName=(newValue_)
 #             @tarballName = newValue_
@@ -90,9 +90,9 @@ class MakeRules
         ## List of header files
         @hFiles  = Array.new
 
-        def hFiles=( _new )
-            @hFiles  = _new
-        end
+#         def hFiles=( _new )
+#             @hFiles  = _new
+#         end
 
         ## add a file in the header files list
         def addhFile( new_hFile )
@@ -171,9 +171,32 @@ class MakeRules
         return JSON.generate(makeRules)
     end
 
-    def loadJson( newJson)
+    def loadJson( newJson )
 
         makeRules = JSON.parse( newJson )
+
+        @binName = makeRules["binName"]
+        @projectName = makeRules["projectName"]
+        @versionNo = makeRules["versionNo"]
+        @tarballName = makeRules["tarballName"]
+        @projectURL = makeRules["projectURL"]
+        @cppCompiler = makeRules["cppCompiler"]
+        @cppFiles = makeRules["cppFiles"]
+        @cppCompiler = makeRules["cppCompiler"]
+        @cppFlags = makeRules["cppFlags"]
+        @ecppCompiler = makeRules["ecppCompiler"]
+        @ecppFlags = makeRules["ecppFlags"]
+        @hFiles = makeRules["hFiles"]
+        @cppFiles = makeRules["cppFiles"]
+        @ecppFiles = makeRules["ecppFiles"]
+        @resourcesFiles = makeRules["resourcesFiles"]
+        @extreDist = makeRules["extreDist"]
+        @thirdpartlibs  = makeRules["thirdpartlibs"]
+        @tntdbsupport = makeRules["tntdbsupport"]
+        @standalone = makeRules["standalone"]
+        @buildDir = makeRules["buildDir"]
+        @email = makeRules["email"]
+
     end
 
 

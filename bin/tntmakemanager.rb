@@ -66,13 +66,15 @@ class TNTMakeManager
 
         # compile ecpp files
         for ecppFile in @rules.ecppFiles
-            objectFiles.push("#{@rules.buildDir}/#{ecppFile}.cpp.o")
+            objectFiles.push("#{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o")
             ## if *.cpp older than *.cpp
-            if File.mtime("#{ecppFile}") > File.mtime(" #{ecppFile}.cpp")
+            if  !File.exist?("#{ecppFile}.cpp") || File.mtime("#{ecppFile}") > File.mtime("#{ecppFile}.cpp")
                 puts "compile  #{ecppFile}"
-                returnValue = `#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{ecppFile}.cpp  #{ecppFile} `
+                puts "#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  #{ecppFile}"
+                returnValue = `#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  #{ecppFile} `
                 puts returnValue
-                returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{ecppFile}.cpp.o #{@rules.buildDir}/#{ecppFile}.cpp`
+                puts "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp"
+                returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp`
                 puts returnValue
                 isNewComplied = true
             else
@@ -83,12 +85,12 @@ class TNTMakeManager
         # compiled resources
         objectFiles.push("#{@rules.buildDir}/resources.o")
         for resourcesFile in @rules.resourcesFiles
-            if File.mtime("#{resourcesFile}") > File.mtime("resources.cpp")
+            if File.mtime("#{resourcesFile}") > File.mtime("resources.cpp") or !File.exist?("resources.cpp")
                 puts "compile resources.cpp"
                 # compile resource files
                 returnValue = `#{@rules.ecppCompiler} -bb -z -n resources -p -o #{@rules.buildDir}/resources.cpp #{@rules.ecppFlags} #{@rules.resourcesFiles}`
                 puts returnValue
-                returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/resources.o  #{@rules.buildDir}/resources.cpp`
+                returnValue = `#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/resources.o  #{@rules.buildDir}/resources.cpp`
                 puts returnValue
                 isNewComplied = true
                 break
@@ -100,7 +102,7 @@ class TNTMakeManager
         for cppFile in @rules.cppFiles
             objectFiles.push("#{@rules.buildDir}/#{cppFile}.cpp.o")
             # if *.cpp older than *.cpp.o
-            if File.mtime("#{cppFile}") > File.mtime(" #{cppFile}.cpp.o")
+            if File.mtime("#{cppFile}") > File.mtime("#{cppFile}.cpp.o") or !File.exist?("#{cppFile}.cpp.o")
                 puts "compile  #{cppFile}"
                 returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{cppFile}.cpp.o #{cppFile}`
                 puts returnValue

@@ -17,8 +17,8 @@ def helpText()
 
     --scan -s
         Same like -e but it is scanning all directories and collecting
-        information about the project. After then write the yaml code on standard
-        output.
+        information about the project. So if you want a make file do:
+        tntmake -s > ./Makefile.tnt
 
     --clean -c
         Clean up generated files in the build directory.
@@ -49,9 +49,12 @@ def argParse()
             returnmessage = `autoreconf --force --install && mkdir -p ./bulid && cd ./bulid && ../configure && make`
             puts returnmessage
         elsif a == "--build" || a == "-b"
-            makeRules =  YAML.load_file( "Makefile.tnt" )
+            jsonText = File.read( "Makefile.tnt" )
+            makeRules = MakeRules.new()
+            makeRules.loadJson( jsonText )
+
             tntmakeManager = TNTMakeManager.new()
-            tntmakeManager.rules=makeRules
+            tntmakeManager.rules = makeRules
             tntmakeManager.buildRun()
         elsif a == "--convert-autotools" || a == "-am"
             # Convert from YAML config file in to a MakeRules class (so i hope!)
