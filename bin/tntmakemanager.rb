@@ -1,10 +1,7 @@
 require 'yaml'
+require 'json'
 require 'mustache'
 require 'fileutils'
-
-
-# require "#{File.dirname(__FILE__)}/foo_class"
-
 
 ##
 # Make processor
@@ -21,40 +18,105 @@ class TNTMakeManager
 
         # ./configure.ac.template
         substituts_1 = Hash.new(0)
+        substituts_1["PROJECTNAME"] = @rules.projectName
         substituts_1["EMAILADRESS"] = @rules.email
+        substituts_1["VERSIONNO"] = @rules.versionNo
+        substituts_1["TARBALLNAME"] = @rules.tarballName
+        substituts_1["PROJECTURL"] = @rules.projectURL
+
         puts "read: resources/configure.ac.template"
         file_ = File.open( "#{File.dirname(__FILE__)}/resources/configure.ac.template", "rb")
         fileContent_ = file_.read()
+        file_.close
+        puts "write ./configure.ac"
         # create ./configure.ac and
         # Suchen und ersetzen....
         File.write('./configure.ac', Mustache.render(fileContent_ , substituts_1) )
 
 
-        # ./Makefile.am.template
+        # ./SubMakefile.am.template
         substituts_2 = Hash.new(0)
-        substituts_2["EXTRA_DIST"] = @rules.extreDist.join("\n")
+        substituts_2["BINFILE"] = @rules.binName
+        substituts_2["EXTRA_DIST"] = @rules.extreDist.join("\\\n")
+        substituts_2["HEADERS"] = @rules.hFiles.join("\\\n")
+        substituts_2["ECPPFILES"] = @rules.ecppFiles.join("\\\n")
+        substituts_2["RESOURCES"] = @rules.resourcesFiles.join("\\\n")
+        substituts_2["CPPFILES"] = @rules.cppFiles.join("\\\n")
         file_ = File.open( "#{File.dirname(__FILE__)}/resources/Makefile.am.template", "rb")
         fileContent_ = file_.read()
-        # create ./configure.ac and
+        file_.close
+        puts "write ./Makefile.am"
+        # create ./Makefile.am and
         # Suchen und ersetzen....
         File.write('./Makefile.am', Mustache.render(fileContent_ , substituts_2) )
 
+    end
 
-        # ./SubMakefile.am.template
-        substituts_3 = Hash.new(0)
-        substituts_3["BINFILE"] = @rules.binName
-        substituts_3["EXTRA_DIST"] = @rules.extreDist.join("\\\n")
-        substituts_3["HEADERS"] = @rules.hFiles.join("\\\n")
-        substituts_3["ECPPFILES"] = @rules.ecppFiles.join("\\\n")
-        substituts_3["RESOURCES"] = @rules.resourcesFiles.join("\\\n")
-        substituts_3["CPPFILES"] = @rules.cppFiles.join("\\\n")
-        file_ = File.open( "#{File.dirname(__FILE__)}/resources/SubMakefile.am.template", "rb")
-        fileContent_ = file_.read()
-        # create ./src/Makefile.am and
-        # Suchen und ersetzen....
-        File.write('./src/Makefile.am', Mustache.render(fileContent_ , substituts_3) )
+    ##
+    # This function create the autotool files
+    def buildRun()
+        isNewComplied = false
+        objectFiles = Array.new
+
+
+        dirname = File.dirname(@rules.buildDir)
+        unless File.directory?(dirname)
+            FileUtils.mkdir_p(dirname)
+        end
+
+        # compile ecpp files
+        for ecppFile in @rules.ecppFiles
+            objectFiles.push("#{@rules.buildDir}/#{ecppFile}.cpp.o")
+            ## if *.cpp older than *.cpp
+            if File.mtime("#{ecppFile}") > File.mtime(" #{ecppFile}.cpp")
+                puts "compile  #{ecppFile}"
+                returnValue = `#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{ecppFile}.cpp  #{ecppFile} `
+                puts returnValue
+                returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{ecppFile}.cpp.o #{@rules.buildDir}/#{ecppFile}.cpp`
+                puts returnValue
+                isNewComplied = true
+            else
+                puts "skip #{ecppFile}"
+            end
+        end
+
+        # compiled resources
+        objectFiles.push("#{@rules.buildDir}/resources.o")
+        for resourcesFile in @rules.resourcesFiles
+            if File.mtime("#{resourcesFile}") > File.mtime("resources.cpp")
+                puts "compile resources.cpp"
+                # compile resource files
+                returnValue = `#{@rules.ecppCompiler} -bb -z -n resources -p -o #{@rules.buildDir}/resources.cpp #{@rules.ecppFlags} #{@rules.resourcesFiles}`
+                puts returnValue
+                returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/resources.o  #{@rules.buildDir}/resources.cpp`
+                puts returnValue
+                isNewComplied = true
+                break
+            end
+        end
+
+
+        # compile ecpp files
+        for cppFile in @rules.cppFiles
+            objectFiles.push("#{@rules.buildDir}/#{cppFile}.cpp.o")
+            # if *.cpp older than *.cpp.o
+            if File.mtime("#{cppFile}") > File.mtime(" #{cppFile}.cpp.o")
+                puts "compile  #{cppFile}"
+                returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{cppFile}.cpp.o #{cppFile}`
+                puts returnValue
+                isNewComplied = true
+            else
+                puts "skip #{cppFile}"
+            end
+        end
+
+        puts "linking programm"
+        returnValue = `#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{@rules.projectName} #{objectFiles.join(" ")}`
+        puts returnValue
+
 
     end
+
 
     ##
     # This function generate a example makefile.
@@ -63,7 +125,11 @@ class TNTMakeManager
         # new Project
         makeRules = MakeRules.new
 
+        makeRules.projectName = "HalloWelt"
         makeRules.binName = "hallowelt"
+        makeRules.versionNo = 1
+        makeRules.tarballName = "hallowelt"
+        makeRules.projectURL = "http://hallowelt.org/"
         makeRules.addhFile( "src/model/Model_1.h" )
         makeRules.addhFile( "src/model/Model_2.h" )
         makeRules.addhFile( "src/model/Model_3.h" )
@@ -124,9 +190,7 @@ class TNTMakeManager
         makeRules.buildDir="bulid"
         makeRules.binName = "tntsoa"
 
-#         return YAML.dump(makeRules)
-        return makeRules.to_yaml( )
-
+        return makeRules.toJson()
 
     end
 

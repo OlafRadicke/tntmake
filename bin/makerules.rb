@@ -13,6 +13,14 @@ require 'fileutils'
 class MakeRules
 
     attr_accessor :binName,
+        :projectName,
+        :versionNo,
+        :tarballName,
+        :projectURL,
+        :cppCompiler,
+        :cppFlags,
+        :ecppCompiler,
+        :ecppFlags,
         :hFiles,
         :cppFiles,
         :ecppFiles,
@@ -27,8 +35,57 @@ class MakeRules
     ##
     # Der Constructor der bei Ruby nicht Constructor heißt.
     def initialize
+
+        ## path to c++ compiler
+        @cppCompiler = ""
+
+        @cppFlags = "-c -I ./src"
+
+        @ecppFlags = "-I ./src"
+
+        ## path to ecpp file comiler
+        @ecppCompiler = ""
+
         ## Name of excitable file
         @binName = ""
+
+#         def binName=(newValue_)
+#             @binName = newValue_
+#         end
+
+        ## Project name
+        @projectName = ""
+
+#         def projectName=(newValue_)
+#             @projectName = newValue_
+#         end
+
+        ## versions number
+        @versionNo = 1
+
+#         def versionNo=(newValue_)
+#             @versionNo = newValue_
+#         end
+
+        ## TARBALLNAME
+        @tarballName = ""
+
+#         def tarballName=(newValue_)
+#             @tarballName = newValue_
+#         end
+
+        ## Project url
+        @projectURL = ""
+
+#         def projectURL=(newValue_)
+#             @projectURL = newValue_
+#         end
+
+        ## Build directoy name
+        @buildDir = "./build"
+
+        ## email address
+        @email = ""
 
         ## List of header files
         @hFiles  = Array.new
@@ -83,12 +140,40 @@ class MakeRules
         ## standalone application y/n
         @standalone = true
 
-        ## Build directoy name
-        @buildDir = "./build"
 
-        ## email address
-        @email = ""
+    end
 
+    def toJson()
+
+        makeRules = Hash.new
+        makeRules["binName"] = @binName
+        makeRules["projectName"] = @projectName
+        makeRules["versionNo"] = @versionNo
+        makeRules["tarballName"] = @tarballName
+        makeRules["projectURL"] = @projectURL
+        makeRules["cppCompiler"] = @cppCompiler
+        makeRules["cppFiles"] = @cppFiles
+        makeRules["cppCompiler"] = @cppCompiler
+        makeRules["cppFlags"] = @cppFlags
+        makeRules["ecppCompiler"] = @ecppCompiler
+        makeRules["ecppFlags"] = @ecppFlags
+        makeRules["hFiles"] = @hFiles
+        makeRules["cppFiles"] = @cppFiles
+        makeRules["ecppFiles"] = @ecppFiles
+        makeRules["resourcesFiles"] = @resourcesFiles
+        makeRules["extreDist"] = @extreDist
+        makeRules["thirdpartlibs"] = @thirdpartlibs
+        makeRules["tntdbsupport"] = @tntdbsupport
+        makeRules["standalone"] = @standalone
+        makeRules["buildDir"] = @buildDir
+        makeRules["email"] = @email
+
+        return JSON.generate(makeRules)
+    end
+
+    def loadJson( newJson)
+
+        makeRules = JSON.parse( newJson )
     end
 
 
