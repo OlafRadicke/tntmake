@@ -58,11 +58,8 @@ class TNTMakeManager
         isNewComplied = false
         objectFiles = Array.new
 
-
-        dirname = File.dirname(@rules.buildDir)
-        unless File.directory?(dirname)
-            FileUtils.mkdir_p(dirname)
-        end
+        puts "Will create if not exit: #{@rules.buildDir}"
+        Dir.mkdir(@rules.buildDir) unless File.exists?(@rules.buildDir)
 
         # compile ecpp files
         for ecppFile in @rules.ecppFiles
@@ -72,10 +69,21 @@ class TNTMakeManager
                 puts "compile  #{ecppFile}"
                 puts "#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  #{ecppFile}"
                 returnValue = `#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  #{ecppFile} `
-                puts returnValue
+                exit_code = `echo $?`.delete!("\n")
+                puts "#{__FILE__} #{__LINE__} : #{returnValue}"
+                puts "exit code : [#{exit_code}]"
+                if exit_code != "0"
+                    raise 'compiling failed'
+                end
+
+
                 puts "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp"
                 returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp`
-                puts returnValue
+                puts "#{__FILE__} #{__LINE__} : #{returnValue}"
+                exit_code = `echo $?`
+                if exit_code != 0
+                    raise 'compiling failed'
+                end
                 isNewComplied = true
             else
                 puts "skip #{ecppFile}"
@@ -85,13 +93,14 @@ class TNTMakeManager
         # compiled resources
         objectFiles.push("#{@rules.buildDir}/resources.o")
         for resourcesFile in @rules.resourcesFiles
-            if File.mtime("#{resourcesFile}") > File.mtime("resources.cpp") or !File.exist?("resources.cpp")
+            puts "Check resources file: #{resourcesFile}"
+            if !File.exist?("resources.cpp") || File.mtime(resourcesFile) > File.mtime("resources.cpp")
                 puts "compile resources.cpp"
                 # compile resource files
                 returnValue = `#{@rules.ecppCompiler} -bb -z -n resources -p -o #{@rules.buildDir}/resources.cpp #{@rules.ecppFlags} #{@rules.resourcesFiles}`
-                puts returnValue
+                puts "#{__FILE__} #{__LINE__} : #{returnValue}"
                 returnValue = `#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/resources.o  #{@rules.buildDir}/resources.cpp`
-                puts returnValue
+                puts "#{__FILE__} #{__LINE__} : #{returnValue}"
                 isNewComplied = true
                 break
             end
@@ -102,10 +111,10 @@ class TNTMakeManager
         for cppFile in @rules.cppFiles
             objectFiles.push("#{@rules.buildDir}/#{cppFile}.cpp.o")
             # if *.cpp older than *.cpp.o
-            if File.mtime("#{cppFile}") > File.mtime("#{cppFile}.cpp.o") or !File.exist?("#{cppFile}.cpp.o")
+            if !File.exist?("#{cppFile}.cpp.o") || File.mtime("#{cppFile}") > File.mtime("#{cppFile}.cpp.o")
                 puts "compile  #{cppFile}"
                 returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{cppFile}.cpp.o #{cppFile}`
-                puts returnValue
+                puts "#{__FILE__} #{__LINE__} : #{returnValue}"
                 isNewComplied = true
             else
                 puts "skip #{cppFile}"
@@ -114,7 +123,7 @@ class TNTMakeManager
 
         puts "linking programm"
         returnValue = `#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{@rules.projectName} #{objectFiles.join(" ")}`
-        puts returnValue
+        puts "#{__FILE__} #{__LINE__} : #{returnValue}"
 
 
     end

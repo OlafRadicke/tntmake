@@ -39,7 +39,7 @@ class MakeRules
         ## path to c++ compiler
         @cppCompiler = "g++"
 
-        @cppFlags = "-c -I ./src"
+        @cppFlags = "-c -I ./src -lcxxtools -ltntnet -ltntdb "
 
         @ecppFlags = "-I./src"
 
