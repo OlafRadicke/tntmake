@@ -39,8 +39,11 @@ Precompiler benutzt. Das was der Meta Object Compiler (moc) ist, ist in Tntnet
 der ecppc.
 
 Tntmake versucht die Verwendung des ecppc zu verbergen und mit einer
-YAML-Configuration die Steuerung möglichst einfach zu halten. Sowohl für
+JSON-Configuration die Steuerung möglichst einfach zu halten. Sowohl für
 Menschen als auch für Tools die auf Tntmake aufsetzen.
+
+Tntmake ist weder besonders mächtig, noch besonders portabel. Es
+soll einfach nur möglichst einfach zu bedienen sein.
 
 ### Kommandozeilen-Optionen ###
 

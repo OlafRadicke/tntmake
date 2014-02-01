@@ -68,7 +68,7 @@ class TNTMakeManager
             if  !File.exist?("#{ecppFile}.cpp") || File.mtime("#{ecppFile}") > File.mtime("#{ecppFile}.cpp")
                 puts "compile  #{ecppFile}"
                 puts "#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  #{ecppFile}"
-                returnValue = `#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  #{ecppFile} `
+                returnValue = `#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  #{ecppFile} 2>&1`
                 exit_code = `echo $?`.delete!("\n")
                 puts "#{__FILE__} #{__LINE__} : #{returnValue}"
                 puts "exit code : [#{exit_code}]"
@@ -78,7 +78,7 @@ class TNTMakeManager
 
 
                 puts "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp"
-                returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp`
+                returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  2>&1`
                 puts "#{__FILE__} #{__LINE__} : #{returnValue}"
                 exit_code = `echo $?`
                 if exit_code != 0
@@ -97,9 +97,9 @@ class TNTMakeManager
             if !File.exist?("resources.cpp") || File.mtime(resourcesFile) > File.mtime("resources.cpp")
                 puts "compile resources.cpp"
                 # compile resource files
-                returnValue = `#{@rules.ecppCompiler} -bb -z -n resources -p -o #{@rules.buildDir}/resources.cpp #{@rules.ecppFlags} #{@rules.resourcesFiles}`
+                returnValue = `#{@rules.ecppCompiler} -bb -z -n resources -p -o #{@rules.buildDir}/resources.cpp #{@rules.ecppFlags} #{@rules.resourcesFiles} 2>&1`
                 puts "#{__FILE__} #{__LINE__} : #{returnValue}"
-                returnValue = `#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/resources.o  #{@rules.buildDir}/resources.cpp`
+                returnValue = `#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/resources.o  #{@rules.buildDir}/resources.cpp 2>&1`
                 puts "#{__FILE__} #{__LINE__} : #{returnValue}"
                 isNewComplied = true
                 break
@@ -113,7 +113,7 @@ class TNTMakeManager
             # if *.cpp older than *.cpp.o
             if !File.exist?("#{cppFile}.cpp.o") || File.mtime("#{cppFile}") > File.mtime("#{cppFile}.cpp.o")
                 puts "compile  #{cppFile}"
-                returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{cppFile}.cpp.o #{cppFile}`
+                returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{cppFile}.cpp.o #{cppFile} 2>&1`
                 puts "#{__FILE__} #{__LINE__} : #{returnValue}"
                 isNewComplied = true
             else
@@ -122,7 +122,7 @@ class TNTMakeManager
         end
 
         puts "linking programm"
-        returnValue = `#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{@rules.projectName} #{objectFiles.join(" ")}`
+        returnValue = `#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{@rules.projectName} #{objectFiles.join(" ")}  2>&1`
         puts "#{__FILE__} #{__LINE__} : #{returnValue}"
 
 
