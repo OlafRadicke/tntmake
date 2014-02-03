@@ -66,22 +66,27 @@ class TNTMakeManager
             objectFiles.push("#{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o")
             ## if *.cpp older than *.cpp
             if  !File.exist?("#{ecppFile}.cpp") || File.mtime("#{ecppFile}") > File.mtime("#{ecppFile}.cpp")
-                puts "compile  #{ecppFile}"
-                puts "#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  #{ecppFile}"
+#                 puts "compile  #{ecppFile}"
                 returnValue = `#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  #{ecppFile} 2>&1`
                 exit_code = `echo $?`.delete!("\n")
-                puts "#{__FILE__} #{__LINE__} : #{returnValue}"
-                puts "exit code : [#{exit_code}]"
                 if exit_code != "0"
+                    puts "#{__FILE__} #{__LINE__} : #{returnValue}"
+                    puts "exit code : [#{exit_code}]"
+                    puts "return value: #{returnValue}"
+                    puts "compiling command failed:"
+                    puts "#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  #{ecppFile}"
                     raise 'compiling failed'
                 end
 
 
-                puts "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp"
                 returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  2>&1`
-                puts "#{__FILE__} #{__LINE__} : #{returnValue}"
                 exit_code = `echo $?`
                 if exit_code != 0
+                    puts "#{__FILE__} #{__LINE__} : #{returnValue}"
+                    puts "exit code : [#{exit_code}]"
+                    puts "return value: #{returnValue}"
+                    puts "compiling command failed:"
+                    puts "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp"
                     raise 'compiling failed'
                 end
                 isNewComplied = true

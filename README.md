@@ -43,7 +43,12 @@ JSON-Configuration die Steuerung möglichst einfach zu halten. Sowohl für
 Menschen als auch für Tools die auf Tntmake aufsetzen.
 
 Tntmake ist weder besonders mächtig, noch besonders portabel. Es
-soll einfach nur möglichst einfach zu bedienen sein.
+soll einfach nur möglichst einfach zu bedienen sein. Zielgruppe sind
+Umsteiger die von Skriptsprachen wie PHP, RubyOnRails, Perl oder
+auch aus der Java-Welt kommen.
+
+Wer mehr braucht oder will muss sih dan in Make, Autotools, cmake oder
+qmake einarbeiten.
 
 ### Kommandozeilen-Optionen ###
 
