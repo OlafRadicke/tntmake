@@ -30,6 +30,7 @@ class MakeRules
         :tntdbsupport,
         :standalone,
         :buildDir,
+        :useThread,
         :email
 
     ##
@@ -139,6 +140,9 @@ class MakeRules
 
         ## standalone application y/n
         @standalone = true
+
+        ## using threads for builds y/n
+        @useThread = false
 
 
     end

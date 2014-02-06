@@ -24,7 +24,10 @@ def helpText()
         Clean up generated files in the build directory.
 
     --build -b
-        Try to read Makefil.tnt an build binary file.
+        Try to read Makefil.tnt an build the binary file.
+
+    --thread-build -tb
+        Try to read Makefil.tnt an build the binary file.
 
     --convert-autotools -am
         it is reading the Makefile.tnt generated the autotools files.
@@ -57,6 +60,15 @@ def argParse()
             jsonText = File.read( "Makefile.tnt" )
             makeRules = MakeRules.new()
             makeRules.loadJson( jsonText )
+
+            tntmakeManager = TNTMakeManager.new()
+            tntmakeManager.rules = makeRules
+            tntmakeManager.buildRun()
+        elsif a == "--thread-build" || a == "-tb"
+            jsonText = File.read( "Makefile.tnt" )
+            makeRules = MakeRules.new()
+            makeRules.loadJson( jsonText )
+            makeRules.useThread = true
 
             tntmakeManager = TNTMakeManager.new()
             tntmakeManager.rules = makeRules

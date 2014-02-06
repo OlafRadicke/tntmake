@@ -53,7 +53,7 @@ class TNTMakeManager
     end
 
     ##
-    # This function create the autotool files
+    # This function create a executable file
     def buildRun()
         isNewComplied = false
         objectFiles = Array.new
@@ -61,50 +61,23 @@ class TNTMakeManager
         puts "Will create if not exit: #{@rules.buildDir}"
         Dir.mkdir(@rules.buildDir) unless File.exists?(@rules.buildDir)
 
+        thrArrayECPP = []
         # compile ecpp files
         for ecppFile in @rules.ecppFiles
             objectFiles.push("#{ecppFile}.o")
-            ## if *.cpp older than *.ecpp
-            if  !File.exist?("#{ecppFile}.cpp") || File.mtime("#{ecppFile}") > File.mtime("#{ecppFile}.cpp")
-                puts '##################### c_tmp -> o ########################'
-
-                # ecpp -> cpp.tmp
-#                 puts "compile  #{ecppFile}"
-                ecpp_command = "#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{ecppFile}  #{ecppFile}"
-                exit_code = system(ecpp_command)
-                puts "command: #{ecpp_command}"
-                puts "exit code : [#{exit_code}]"
-#                 exit_code = `$?`.delete!("\n")
-#                 if exit_code != "0"
-                if exit_code != true || exit_code == nil
-                    puts "#{__FILE__} #{__LINE__} : "
-                    puts "exit code : [#{exit_code}]"
-#                     puts "return value: #{returnValue}"
-                    puts "compiling command failed:"
-                    puts "#{ecpp_command}"
-                    raise 'compiling failed'
-                end
-
-                puts '====================== c_tmp -> o ========================'
-                cpp_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{ecppFile}.o #{ecppFile}.cpp"
-                exit_code = system(cpp_command)
-                puts "command: #{cpp_command}"
-                puts "exit code : [#{exit_code}]"
-                puts `ls -lah  #{ecppFile}.cpp`
-                puts `ls -lah #{ecppFile}.o`
-                if exit_code != true || exit_code == nil
-                    puts "#{__FILE__} #{__LINE__} :"
-                    puts "exit code : [#{exit_code}]"
-                    puts "compiling command failed:"
-                    puts "#{cpp_command}"
-                    raise 'compiling failed'
-                end
-                isNewComplied = true
+            if @rules.useThread
+                # with threading
+                thrArrayECPP <<  Thread.new { compileCppFiles( ecppFile ) }
             else
-                puts "skip: #{ecppFile}"
-                puts `ls -lah #{ecppFile}*`
+                # without threading
+                compileEcppFiles( ecppFile )
             end
         end
+        thrArrayECPP.each { |thr| thr.join }
+
+        puts '#################################################################'
+        puts '                ENDE DES ERSTEN THREAD-DURCHLAUF'
+        puts '#################################################################'
 
         # compiled resources
         objectFiles.push("#{@rules.buildDir}/resources.o")
@@ -141,25 +114,23 @@ class TNTMakeManager
 
 
         # compile cpp files
+        thrArrayCPP = []
         for cppFile in @rules.cppFiles
             objectFiles.push("#{cppFile}.o")
-            # if *.cpp older than *.cpp.o
-            if !File.exist?("#{cppFile}.o") || File.mtime("#{cppFile}") > File.mtime("#{cppFile}.o")
-                puts "compile  #{cppFile}"
-                cpp_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{cppFile}.o #{cppFile}"
-                exit_code = system( cpp_command)
-                if exit_code != true || exit_code == nil
-                    puts "compiling command failed:"
-                    puts "#{cpp_command}"
-                    raise 'compiling failed'
-                end
-                puts "#{__FILE__} #{__LINE__} exit_code: #{exit_code}"
-                isNewComplied = true
+
+            if @rules.useThread
+                # with threading
+                thrArrayCPP << Thread.new { compileCppFiles( cppFile ) }
             else
-                puts "skip #{cppFile}"
-                puts `ls -lah #{cppFile}.o #{cppFile} #{cppFile}.o`
+                # without threading
+                compileCppFiles( cppFile )
             end
         end
+        thrArrayCPP.each { |thr| thr.join }
+
+        puts '#################################################################'
+        puts '                ENDE DES ZWEITEN THREAD-DURCHLAUF'
+        puts '#################################################################'
 
         puts "linking programm"
         linkingCommand = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{@rules.projectName} #{objectFiles.join(" ")}"
@@ -169,9 +140,80 @@ class TNTMakeManager
             puts "#{linkingCommand}"
             raise 'compiling failed'
         end
-        puts "#{__FILE__} #{__LINE__} : #{returnValue}"
+    end
 
+    ## compile ecpp files
+    def compileEcppFiles( fileName )
+        output = []
+        ## if *.cpp older than *.ecpp
+        if  !File.exist?("#{fileName}.cpp") || File.mtime("#{fileName}") > File.mtime("#{fileName}.cpp")
+#             puts "##################### c_tmp -> o ########################"
+            output << "##################### c_tmp -> o ########################"
+            ecpp_command = "#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{fileName}  #{fileName}"
+            exit_code = system(ecpp_command)
 
+#             puts "command: #{ecpp_command}"
+            output << "command: #{ecpp_command}"
+#             puts "exit code : [#{exit_code}]"
+            output << "exit code : [#{exit_code}]"
+            if exit_code != true || exit_code == nil
+                puts "#{__FILE__} #{__LINE__} : "
+                puts "exit code : [#{exit_code}]"
+                puts "compiling command failed:"
+                puts "#{ecpp_command}"
+                raise 'compiling failed'
+            end
+
+#             puts "====================== c_tmp -> o ========================"
+            output << "====================== c_tmp -> o ========================"
+            cpp_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{fileName}.o #{fileName}.cpp"
+            exit_code = system(cpp_command)
+#             puts "command: #{cpp_command}"
+            output << "command: #{cpp_command}"
+#             puts "exit code : [#{exit_code}]"
+            output << "exit code : [#{exit_code}]"
+#             puts `ls -lah  #{fileName}.cpp`
+            output << `ls -lah  #{fileName}.cpp`
+#             puts `ls -lah #{fileName}.o`
+            output << `ls -lah #{fileName}.o`
+            if exit_code != true || exit_code == nil
+                puts "#{__FILE__} #{__LINE__} :"
+                puts "exit code : [#{exit_code}]"
+                puts "compiling command failed:"
+                puts "#{cpp_command}"
+                raise 'compiling failed'
+            end
+            isNewComplied = true
+        else
+#             puts "skip: #{fileName}"
+            output << "skip: #{fileName}"
+#             puts `ls -lah #{fileName}*`
+            output << `ls -lah #{fileName}*`
+        end
+        puts output
+
+    end
+
+    ## compiled cpp files
+    def compileCppFiles( fileName )
+
+        # if *.cpp older than *.cpp.o
+        if !File.exist?("#{fileName}.o") || File.mtime("#{fileName}") > File.mtime("#{fileName}.o")
+            puts "compile  #{fileName}"
+            cpp_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{fileName}.o #{fileName}"
+            puts "#{cpp_command}"
+            exit_code = system( cpp_command)
+            if exit_code != true || exit_code == nil
+                puts "compiling command failed:"
+                puts "#{cpp_command}"
+                raise 'compiling failed'
+            end
+            puts "#{__FILE__} #{__LINE__} exit_code: #{exit_code}"
+            isNewComplied = true
+        else
+            puts "skip #{fileName}"
+            puts `ls -lah #{fileName}.o #{fileName} #{fileName}.o`
+        end
     end
 
 
