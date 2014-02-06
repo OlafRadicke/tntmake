@@ -40,7 +40,12 @@ def argParse()
             tntmakeManager = TNTMakeManager.new()
             puts tntmakeManager.getExampleConfigFile()
         elsif a == "--clean" || a == "-c"
+            jsonText = File.read( "Makefile.tnt" )
+            makeRules = MakeRules.new()
+            makeRules.loadJson( jsonText )
+
             tntmakeManager = TNTMakeManager.new()
+            tntmakeManager.rules = makeRules
             tntmakeManager.clean()
         elsif a == "--scan" || a == "-s"
             tntmakeManager = TNTMakeManager.new()

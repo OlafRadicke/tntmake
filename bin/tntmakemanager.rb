@@ -63,35 +63,44 @@ class TNTMakeManager
 
         # compile ecpp files
         for ecppFile in @rules.ecppFiles
-            objectFiles.push("#{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o")
-            ## if *.cpp older than *.cpp
+            objectFiles.push("#{ecppFile}.o")
+            ## if *.cpp older than *.ecpp
             if  !File.exist?("#{ecppFile}.cpp") || File.mtime("#{ecppFile}") > File.mtime("#{ecppFile}.cpp")
+                puts '##################### c_tmp -> o ########################'
+
+                # ecpp -> cpp.tmp
 #                 puts "compile  #{ecppFile}"
-                returnValue = `#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  #{ecppFile} 2>&1`
-                exit_code = `echo $?`.delete!("\n")
-                if exit_code != "0"
-                    puts "#{__FILE__} #{__LINE__} : #{returnValue}"
+                ecpp_command = "#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{ecppFile}.c_tmp  #{ecppFile}"
+                exit_code = system '#{ecpp_command}'
+                puts "command: #{ecpp_command}"
+                puts "exit code : [#{exit_code}]"
+#                 exit_code = `$?`.delete!("\n")
+#                 if exit_code != "0"
+                if exit_code != true || exit_code == nil
+                    puts "#{__FILE__} #{__LINE__} : "
                     puts "exit code : [#{exit_code}]"
-                    puts "return value: #{returnValue}"
+#                     puts "return value: #{returnValue}"
                     puts "compiling command failed:"
-                    puts "#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  #{ecppFile}"
+                    puts "#{ecpp_command}"
                     raise 'compiling failed'
                 end
 
-
-                returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp  2>&1`
-                exit_code = `echo $?`
-                if exit_code != 0
-                    puts "#{__FILE__} #{__LINE__} : #{returnValue}"
+                puts '====================== c_tmp -> o ========================'
+                cpp_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{ecppFile}.o #{ecppFile}.c_tmp"
+                exit_code = system '#{cpp_command}'
+                puts "command: #{cpp_command}"
+                puts "exit code : [#{exit_code}]"
+                if exit_code != true || exit_code == nil
+                    puts "#{__FILE__} #{__LINE__} :"
                     puts "exit code : [#{exit_code}]"
-                    puts "return value: #{returnValue}"
                     puts "compiling command failed:"
-                    puts "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp.o #{@rules.buildDir}/#{File.basename(ecppFile)}.cpp"
+                    puts "#{cpp_command}"
                     raise 'compiling failed'
                 end
                 isNewComplied = true
             else
-                puts "skip #{ecppFile}"
+                puts "skip: #{ecppFile}"
+                puts `ls -lah #{ecppFile}.cpp #{ecppFile} #{ecppFile}.cpp`
             end
         end
 
@@ -101,28 +110,51 @@ class TNTMakeManager
             puts "Check resources file: #{resourcesFile}"
             if !File.exist?("resources.cpp") || File.mtime(resourcesFile) > File.mtime("resources.cpp")
                 puts "compile resources.cpp"
+                # all -> cpp
                 # compile resource files
-                returnValue = `#{@rules.ecppCompiler} -bb -z -n resources -p -o #{@rules.buildDir}/resources.cpp #{@rules.ecppFlags} #{@rules.resourcesFiles} 2>&1`
-                puts "#{__FILE__} #{__LINE__} : #{returnValue}"
-                returnValue = `#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/resources.o  #{@rules.buildDir}/resources.cpp 2>&1`
-                puts "#{__FILE__} #{__LINE__} : #{returnValue}"
+                ecpp_command ="#{@rules.ecppCompiler} -bb -z -n resources -p -o #{@rules.buildDir}/resources.c_tmp #{@rules.ecppFlags} #{@rules.resourcesFiles}"
+                exit_code = system '#{ecpp_command}'
+                if exit_code != true || exit_code == nil
+                    puts "#{__FILE__} #{__LINE__} :"
+                    puts "exit code : [#{exit_code}]"
+                    puts "compiling command failed:"
+                    puts "#{ecpp_command}"
+                    raise 'compiling failed'
+                end
+
+                p_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/resources.o  #{@rules.buildDir}/resources.c_tmp "
+                exit_code = system '#{p_command}'
+                if exit_code != true || exit_code == nil
+                    puts "#{__FILE__} #{__LINE__} :"
+                    puts "exit code : [#{exit_code}]"
+                    puts "compiling command failed:"
+                    puts "#{cpp_command}"
+                end
+
                 isNewComplied = true
                 break
             end
         end
 
 
-        # compile ecpp files
+        # compile cpp files
         for cppFile in @rules.cppFiles
-            objectFiles.push("#{@rules.buildDir}/#{cppFile}.cpp.o")
+            objectFiles.push("#{cppFile}.o")
             # if *.cpp older than *.cpp.o
-            if !File.exist?("#{cppFile}.cpp.o") || File.mtime("#{cppFile}") > File.mtime("#{cppFile}.cpp.o")
+            if !File.exist?("#{cppFile}.o") || File.mtime("#{cppFile}") > File.mtime("#{cppFile}.o")
                 puts "compile  #{cppFile}"
-                returnValue = `#{@rules.ecppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{cppFile}.cpp.o #{cppFile} 2>&1`
-                puts "#{__FILE__} #{__LINE__} : #{returnValue}"
+                cpp_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{cppFile}.o #{cppFile}"
+                exit_code = system( "#{cpp_command}  2>> ./tntmake.log")
+                if exit_code != true || exit_code == nil
+                    puts "compiling command failed:"
+                    puts "#{cpp_command}"
+                    raise 'compiling failed'
+                end
+                puts "#{__FILE__} #{__LINE__} exit_code: #{exit_code}"
                 isNewComplied = true
             else
                 puts "skip #{cppFile}"
+                puts `ls -lah #{cppFile}.o #{cppFile} #{cppFile}.o`
             end
         end
 
@@ -211,9 +243,18 @@ class TNTMakeManager
     end
 
     ##
-    # remove the Makefile.tnt config file.
+    # remove the tntmake generated files (*.o *.c_tmp)
     def clean()
-        FileUtils.rm_rf("Makefile.tnt")
+        cleanFiles = Array.new
+
+        for ecppFile in @rules.ecppFiles
+            cleanFiles.push("#{ecppFile}.o")
+            cleanFiles.push("#{ecppFile}.c_tmp")
+        end
+        for cppFile in @rules.cppFiles
+            cleanFiles.push("#{cppFile}.o")
+        end
+        cleanFiles.push(@rules.projectName)
     end
 
     def cleanBuildDir()
