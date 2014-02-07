@@ -61,6 +61,18 @@ class TNTMakeManager
         puts "Will create if not exit: #{@rules.buildDir}"
         Dir.mkdir(@rules.buildDir) unless File.exists?(@rules.buildDir)
 
+        # check header files
+        for hFile in @rules.hFiles
+            puts "check file: #{hFile}"
+            if File.exist?("#{@rules.buildDir}/#{@rules.binName}") && File.mtime("#{@rules.buildDir}/#{@rules.binName}") > File.mtime(hFile)
+                # if the execute file older than a header file than rebuild the
+                # complete project new.
+                clean()
+                puts "A header file is updated. call clean function an rebuild new."
+                break
+            end
+        end
+
         thrArrayECPP = []
         # compile ecpp files
         for ecppFile in @rules.ecppFiles
@@ -133,13 +145,14 @@ class TNTMakeManager
         puts '#################################################################'
 
         puts "linking programm"
-        linkingCommand = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/#{@rules.projectName} #{objectFiles.join(" ")}"
+        linkingCommand = "#{@rules.cppCompiler} #{@rules.cppLinkerFlags} -o #{@rules.buildDir}/#{@rules.binName} #{objectFiles.join(" ")}"
         exit_code = system( linkingCommand)
         if exit_code != true || exit_code == nil
             puts "compiling command failed:"
             puts "#{linkingCommand}"
             raise 'compiling failed'
         end
+        puts "#{@rules.buildDir}/#{@rules.binName} is created!"
     end
 
     ## compile ecpp files

@@ -19,6 +19,7 @@ class MakeRules
         :projectURL,
         :cppCompiler,
         :cppFlags,
+        :cppLinkerFlags,
         :ecppCompiler,
         :ecppFlags,
         :hFiles,
@@ -40,7 +41,9 @@ class MakeRules
         ## path to c++ compiler
         @cppCompiler = "g++"
 
-        @cppFlags = "-c -I ./src -lcxxtools -ltntnet -ltntdb "
+        @cppFlags = "-c -Wall -pedantic  -I ./src  "
+
+        @cppLinkerFlags = " -I./src -lcxxtools -ltntnet -ltntdb "
 
         @ecppFlags = "-I./src"
 
@@ -159,6 +162,7 @@ class MakeRules
         makeRules["cppFiles"] = @cppFiles
         makeRules["cppCompiler"] = @cppCompiler
         makeRules["cppFlags"] = @cppFlags
+        makeRules["cppLinkerFlags"] = @cppLinkerFlags
         makeRules["ecppCompiler"] = @ecppCompiler
         makeRules["ecppFlags"] = @ecppFlags
         makeRules["hFiles"] = @hFiles
@@ -188,6 +192,7 @@ class MakeRules
         @cppFiles = makeRules["cppFiles"]
         @cppCompiler = makeRules["cppCompiler"]
         @cppFlags = makeRules["cppFlags"]
+        @cppLinkerFlags = makeRules["cppLinkerFlags"]
         @ecppCompiler = makeRules["ecppCompiler"]
         @ecppFlags = makeRules["ecppFlags"]
         @hFiles = makeRules["hFiles"]
