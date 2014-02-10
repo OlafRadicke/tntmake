@@ -31,6 +31,12 @@ Alternativ kann man tntmake auch am RPM-System vorbei installieren mit
 
     make install
 
+## Todo ##
+
+* Einbeziehung der Header-Dateien
+* Code aufräumen
+* Reimplementierung in C++, Java oder was auch immer...
+
 ## Doku ##
 
 ### Grundidee ###
@@ -77,7 +83,6 @@ beginnt. Die Konfiguration muss "" heißen und im selben Verzeichnis liegen von
 dem aus Tntmake gestartet wird. Befehl zum kompilieren lautet:
 
     tntmake -b
-
 
 
 
