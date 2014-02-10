@@ -260,7 +260,7 @@ class TNTMakeManager
         makeRules.thirdpartlibs="-boost"
         makeRules.tntdbsupport="y"
         makeRules.standalone="y"
-        makeRules.buildDir="bulid_1"
+        makeRules.buildDir="build_1"
         makeRules.email="maintainer@nix.org"
 
         return YAML.dump(makeRules)
