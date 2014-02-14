@@ -160,14 +160,11 @@ class TNTMakeManager
         output = []
         ## if *.cpp older than *.ecpp
         if  !File.exist?("#{fileName}.cpp") || File.mtime("#{fileName}") > File.mtime("#{fileName}.cpp")
-#             puts "##################### c_tmp -> o ########################"
             output << "##################### c_tmp -> o ########################"
             ecpp_command = "#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{fileName}  #{fileName}"
             exit_code = system(ecpp_command)
 
-#             puts "command: #{ecpp_command}"
             output << "command: #{ecpp_command}"
-#             puts "exit code : [#{exit_code}]"
             output << "exit code : [#{exit_code}]"
             if exit_code != true || exit_code == nil
                 puts "#{__FILE__} #{__LINE__} : "
@@ -177,17 +174,12 @@ class TNTMakeManager
                 raise 'compiling failed'
             end
 
-#             puts "====================== c_tmp -> o ========================"
             output << "====================== c_tmp -> o ========================"
             cpp_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{fileName}.o #{fileName}.cpp"
             exit_code = system(cpp_command)
-#             puts "command: #{cpp_command}"
             output << "command: #{cpp_command}"
-#             puts "exit code : [#{exit_code}]"
             output << "exit code : [#{exit_code}]"
-#             puts `ls -lah  #{fileName}.cpp`
             output << `ls -lah  #{fileName}.cpp`
-#             puts `ls -lah #{fileName}.o`
             output << `ls -lah #{fileName}.o`
             if exit_code != true || exit_code == nil
                 puts "#{__FILE__} #{__LINE__} :"
@@ -198,9 +190,7 @@ class TNTMakeManager
             end
             isNewComplied = true
         else
-#             puts "skip: #{fileName}"
             output << "skip: #{fileName}"
-#             puts `ls -lah #{fileName}*`
             output << `ls -lah #{fileName}*`
         end
         puts output
