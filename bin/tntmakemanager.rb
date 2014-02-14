@@ -201,26 +201,28 @@ class TNTMakeManager
 
     ## compiled cpp files
     def compileCppFiles( fileName )
-
+        output = []
         # if *.cpp older than *.cpp.o
         if !File.exist?("#{fileName}.o") || File.mtime("#{fileName}") > File.mtime("#{fileName}.o")
 
             output << "====================== cpp -> o ========================"
-            puts "compile  #{fileName}"
+            output << "compile  #{fileName}"
             cpp_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{fileName}.o #{fileName}"
-            puts "#{cpp_command}"
+            output << "#{cpp_command}"
             exit_code = system( cpp_command)
             if exit_code != true || exit_code == nil
                 puts "compiling command failed:"
                 puts "#{cpp_command}"
                 raise 'compiling failed'
             end
-            puts "#{__FILE__} #{__LINE__} exit_code: #{exit_code}"
+            output << "#{__FILE__} #{__LINE__} exit_code: #{exit_code}"
             isNewComplied = true
+
         else
-            puts "skip #{fileName}"
-            puts `ls -lah #{fileName}.o #{fileName} #{fileName}.o`
+            output << "skip #{fileName}"
+            output << `ls -lah #{fileName}.o #{fileName} #{fileName}.o`
         end
+        puts output
     end
 
 
