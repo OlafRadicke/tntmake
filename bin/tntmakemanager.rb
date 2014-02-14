@@ -264,10 +264,6 @@ class TNTMakeManager
 
         fileList = `find ./ -name '*.h'`
         makeRules.hFiles = fileList.split("\n")
-#         for fileName in fileList.split("\n")
-#             puts "-" + fileName + "-"
-#             makeRules.addhFile( fileName + "" )
-#         end
 
         fileList_2 = `find ./ -name '*.cpp'`
         for fileName_2 in fileList_2.split("\n")
@@ -285,12 +281,6 @@ class TNTMakeManager
         for fileName_3 in fileList_3.split("\n")
             makeRules.addresourcesFiles( fileName_3 )
         end
-
-        makeRules.email="breifkasten@olaf-radicke.de"
-        makeRules.tntdbsupport="y"
-        makeRules.standalone="y"
-        makeRules.buildDir="bulid"
-        makeRules.binName = "tntsoa"
 
         return makeRules.toJson()
 
