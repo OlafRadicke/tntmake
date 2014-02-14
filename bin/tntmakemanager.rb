@@ -92,7 +92,9 @@ class TNTMakeManager
         puts '#################################################################'
 
         # compiled resources
-        objectFiles.push("#{@rules.buildDir}/resources.o")
+        if @rules.resourcesFiles.size > 0
+            objectFiles.push("#{@rules.buildDir}/resources.o")
+        end
         for resourcesFile in @rules.resourcesFiles
             puts "Check resources file: #{resourcesFile}"
             if !File.exist?("resources.cpp") || File.mtime(resourcesFile) > File.mtime("resources.cpp")
@@ -159,8 +161,8 @@ class TNTMakeManager
     def compileEcppFiles( fileName )
         output = []
         ## if *.cpp older than *.ecpp
-        if  !File.exist?("#{fileName}.cpp") || File.mtime("#{fileName}") > File.mtime("#{fileName}.cpp")
-            output << "##################### c_tmp -> o ########################"
+        if  !File.exist?("#{fileName}.cpp") || !File.exist?("#{fileName}.o") || File.mtime("#{fileName}") > File.mtime("#{fileName}.cpp")
+            output << "##################### ecpp -> cpp ########################"
             ecpp_command = "#{@rules.ecppCompiler} #{@rules.ecppFlags} -o #{fileName}  #{fileName}"
             exit_code = system(ecpp_command)
 
@@ -174,7 +176,7 @@ class TNTMakeManager
                 raise 'compiling failed'
             end
 
-            output << "====================== c_tmp -> o ========================"
+            output << "====================== cpp -> o ========================"
             cpp_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{fileName}.o #{fileName}.cpp"
             exit_code = system(cpp_command)
             output << "command: #{cpp_command}"
@@ -202,6 +204,8 @@ class TNTMakeManager
 
         # if *.cpp older than *.cpp.o
         if !File.exist?("#{fileName}.o") || File.mtime("#{fileName}") > File.mtime("#{fileName}.o")
+
+            output << "====================== cpp -> o ========================"
             puts "compile  #{fileName}"
             cpp_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{fileName}.o #{fileName}"
             puts "#{cpp_command}"
