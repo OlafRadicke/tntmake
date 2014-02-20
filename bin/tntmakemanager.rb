@@ -63,8 +63,11 @@ class TNTMakeManager
             if File.exist?("#{@rules.buildDir}/#{@rules.binName}") && File.mtime("#{@rules.buildDir}/#{@rules.binName}") > File.mtime(hFile)
                 # if the execute file older than a header file than rebuild the
                 # complete project new.
-                clean()
                 puts "A header file is updated. call clean function an rebuild new."
+                clean()
+                puts "Will create if not exit: #{@rules.buildDir}"
+                Dir.mkdir(@rules.buildDir) unless File.exists?(@rules.buildDir)
+
                 break
             end
         end
