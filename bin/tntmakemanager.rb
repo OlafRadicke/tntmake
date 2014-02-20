@@ -308,7 +308,7 @@ class TNTMakeManager
             puts "\n #{cleanCommand}"
             raise 'compiling failed'
         end
-        
+
         puts "Remove: \n"
         puts cleanFiles
         puts @rules.buildDir
