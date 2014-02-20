@@ -10,6 +10,7 @@ class TNTMakeManager
 
     def rules=( _newRules )
         @rules=_newRules
+        @isNewComplied = false
     end
 
     ##
@@ -18,11 +19,6 @@ class TNTMakeManager
 
         # ./configure.ac.template
         substituts_1 = Hash.new(0)
-        substituts_1["PROJECTNAME"] = @rules.projectName
-        substituts_1["EMAILADRESS"] = @rules.email
-        substituts_1["VERSIONNO"] = @rules.versionNo
-        substituts_1["TARBALLNAME"] = @rules.tarballName
-        substituts_1["PROJECTURL"] = @rules.projectURL
 
         puts "read: resources/configure.ac.template"
         file_ = File.open( "#{File.dirname(__FILE__)}/resources/configure.ac.template", "rb")
@@ -55,7 +51,7 @@ class TNTMakeManager
     ##
     # This function create a executable file
     def buildRun()
-        isNewComplied = false
+        @isNewComplied = false
         objectFiles = Array.new
 
         puts "Will create if not exit: #{@rules.buildDir}"
@@ -121,7 +117,7 @@ class TNTMakeManager
                     raise 'compiling failed'
                 end
 
-                isNewComplied = true
+                @isNewComplied = true
                 break
             end
         end
@@ -190,7 +186,7 @@ class TNTMakeManager
                 puts "#{cpp_command}"
                 raise 'compiling failed'
             end
-            isNewComplied = true
+            @isNewComplied = true
         else
             output << "skip: #{fileName}"
             output << `ls -lah #{fileName}*`
@@ -216,7 +212,7 @@ class TNTMakeManager
                 raise 'compiling failed'
             end
             output << "#{__FILE__} #{__LINE__} exit_code: #{exit_code}"
-            isNewComplied = true
+            @isNewComplied = true
 
         else
             output << "skip #{fileName}"
@@ -233,11 +229,7 @@ class TNTMakeManager
         # new Project
         makeRules = MakeRules.new
 
-        makeRules.projectName = "HalloWelt"
         makeRules.binName = "hallowelt"
-        makeRules.versionNo = 1
-        makeRules.tarballName = "hallowelt"
-        makeRules.projectURL = "http://hallowelt.org/"
         makeRules.addhFile( "src/model/Model_1.h" )
         makeRules.addhFile( "src/model/Model_2.h" )
         makeRules.addhFile( "src/model/Model_3.h" )
@@ -253,11 +245,7 @@ class TNTMakeManager
         makeRules.addresourcesFiles( "src/resource/style.css")
         makeRules.addExtreDistFiles( "README.md")
         makeRules.addExtreDistFiles( "sql/example.sql")
-        makeRules.thirdpartlibs="-boost"
-        makeRules.tntdbsupport="y"
-        makeRules.standalone="y"
         makeRules.buildDir="build_1"
-        makeRules.email="maintainer@nix.org"
 
         return YAML.dump(makeRules)
     end
@@ -304,7 +292,7 @@ class TNTMakeManager
         for cppFile in @rules.cppFiles
             cleanFiles.push("#{cppFile}.o")
         end
-        cleanFiles.push(@rules.projectName)
+
         cleanCommand = "rm -f  #{cleanFiles.join(" ")}"
         exit_code = system( cleanCommand )
         if exit_code != true || exit_code == nil
@@ -320,6 +308,10 @@ class TNTMakeManager
             puts "\n #{cleanCommand}"
             raise 'compiling failed'
         end
+        
+        puts "Remove: \n"
+        puts cleanFiles
+        puts @rules.buildDir
     end
 
     def cleanBuildDir()

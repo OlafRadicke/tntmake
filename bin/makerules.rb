@@ -13,10 +13,6 @@ require 'fileutils'
 class MakeRules
 
     attr_accessor :binName,
-        :projectName,
-        :versionNo,
-        :tarballName,
-        :projectURL,
         :cppCompiler,
         :cppFlags,
         :cppLinkerFlags,
@@ -26,13 +22,8 @@ class MakeRules
         :cppFiles,
         :ecppFiles,
         :resourcesFiles,
-        :extreDist,
-        :thirdpartlibs,
-        :tntdbsupport,
-        :standalone,
         :buildDir,
-        :useThread,
-        :email
+        :useThread
 
     ##
     # Der Constructor der bei Ruby nicht Constructor heißt.
@@ -53,43 +44,9 @@ class MakeRules
         ## Name of excitable file
         @binName = "helloweld"
 
-#         def binName=(newValue_)
-#             @binName = newValue_
-#         end
-
-        ## Project name
-        @projectName = "helloweld"
-
-#         def projectName=(newValue_)
-#             @projectName = newValue_
-#         end
-
-        ## versions number
-        @versionNo = 1
-
-#         def versionNo=(newValue_)
-#             @versionNo = newValue_
-#         end
-
-        ## TARBALLNAME
-        @tarballName = "helloweld"
-
-#         def tarballName=(newValue_)
-#             @tarballName = newValue_
-#         end
-
-        ## Project url
-        @projectURL = ""
-
-#         def projectURL=(newValue_)
-#             @projectURL = newValue_
-#         end
 
         ## Build directoy name
         @buildDir = "./build"
-
-        ## email address
-        @email = ""
 
         ## List of header files
         @hFiles  = Array.new
@@ -135,15 +92,6 @@ class MakeRules
             @extreDist.push( new_extreDist )
         end
 
-        ## Complier flags for third part libs
-        @thirdpartlibs = ""
-
-        ## tntbd support switch
-        @tntdbsupport = true
-
-        ## standalone application y/n
-        @standalone = true
-
         ## using threads for builds y/n
         @useThread = false
 
@@ -154,10 +102,6 @@ class MakeRules
 
         makeRules = Hash.new
         makeRules["binName"] = @binName
-        makeRules["projectName"] = @projectName
-        makeRules["versionNo"] = @versionNo
-        makeRules["tarballName"] = @tarballName
-        makeRules["projectURL"] = @projectURL
         makeRules["cppCompiler"] = @cppCompiler
         makeRules["cppFiles"] = @cppFiles
         makeRules["cppCompiler"] = @cppCompiler
@@ -170,11 +114,7 @@ class MakeRules
         makeRules["ecppFiles"] = @ecppFiles
         makeRules["resourcesFiles"] = @resourcesFiles
         makeRules["extreDist"] = @extreDist
-        makeRules["thirdpartlibs"] = @thirdpartlibs
-        makeRules["tntdbsupport"] = @tntdbsupport
-        makeRules["standalone"] = @standalone
         makeRules["buildDir"] = @buildDir
-        makeRules["email"] = @email
 
         return JSON.generate(makeRules)
     end
@@ -184,10 +124,6 @@ class MakeRules
         makeRules = JSON.parse( newJson )
 
         @binName = makeRules["binName"]
-        @projectName = makeRules["projectName"]
-        @versionNo = makeRules["versionNo"]
-        @tarballName = makeRules["tarballName"]
-        @projectURL = makeRules["projectURL"]
         @cppCompiler = makeRules["cppCompiler"]
         @cppFiles = makeRules["cppFiles"]
         @cppCompiler = makeRules["cppCompiler"]
@@ -200,11 +136,7 @@ class MakeRules
         @ecppFiles = makeRules["ecppFiles"]
         @resourcesFiles = makeRules["resourcesFiles"]
         @extreDist = makeRules["extreDist"]
-        @thirdpartlibs  = makeRules["thirdpartlibs"]
-        @tntdbsupport = makeRules["tntdbsupport"]
-        @standalone = makeRules["standalone"]
         @buildDir = makeRules["buildDir"]
-        @email = makeRules["email"]
 
     end
 
