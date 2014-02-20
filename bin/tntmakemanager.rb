@@ -101,6 +101,9 @@ class TNTMakeManager
                 # all -> cpp
                 # compile resource files
                 ecpp_command ="#{@rules.ecppCompiler} -bb -z -n resources -p -o #{@rules.buildDir}/resources #{@rules.ecppFlags} #{@rules.resourcesFiles.join(" ")}"
+                puts "(re-) compiling resources: \n"
+                puts ecpp_command
+#                 puts @rules.resourcesFiles
                 exit_code = system(ecpp_command)
                 if exit_code != true || exit_code == nil
                     puts "#{__FILE__} #{__LINE__} :"
@@ -111,6 +114,8 @@ class TNTMakeManager
                 end
 
                 p_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/resources.o  #{@rules.buildDir}/resources.cpp "
+                puts p_command
+
                 exit_code = system(p_command)
                 if exit_code != true || exit_code == nil
                     puts "#{__FILE__} #{__LINE__} :"
@@ -148,6 +153,8 @@ class TNTMakeManager
         puts "linking programm"
         linkingCommand = "#{@rules.cppCompiler} #{@rules.cppLinkerFlags} -o #{@rules.buildDir}/#{@rules.binName} #{objectFiles.join(" ")}"
         exit_code = system( linkingCommand)
+        puts linkingCommand
+
         if exit_code != true || exit_code == nil
             puts "compiling command failed:"
             puts "#{linkingCommand}"
