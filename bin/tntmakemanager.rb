@@ -100,7 +100,7 @@ class TNTMakeManager
                 puts "compile resources.cpp"
                 # all -> cpp
                 # compile resource files
-                ecpp_command ="#{@rules.ecppCompiler} -bb -z -n resources -p -o #{@rules.buildDir}/resources #{@rules.ecppFlags} #{@rules.resourcesFiles.join(" ")}"
+                ecpp_command ="#{@rules.ecppCompiler} #{@rules.ecppFlags} -bb -z -n resources -p -o #{@rules.buildDir}/resources  #{@rules.resourcesFiles.join(" ")}"
                 puts "(re-) compiling resources: \n"
                 puts ecpp_command
 #                 puts @rules.resourcesFiles
