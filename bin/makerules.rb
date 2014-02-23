@@ -104,7 +104,6 @@ class MakeRules
         makeRules["binName"] = @binName
         makeRules["cppCompiler"] = @cppCompiler
         makeRules["cppFiles"] = @cppFiles
-        makeRules["cppCompiler"] = @cppCompiler
         makeRules["cppFlags"] = @cppFlags
         makeRules["cppLinkerFlags"] = @cppLinkerFlags
         makeRules["ecppCompiler"] = @ecppCompiler
@@ -126,7 +125,6 @@ class MakeRules
         @binName = makeRules["binName"]
         @cppCompiler = makeRules["cppCompiler"]
         @cppFiles = makeRules["cppFiles"]
-        @cppCompiler = makeRules["cppCompiler"]
         @cppFlags = makeRules["cppFlags"]
         @cppLinkerFlags = makeRules["cppLinkerFlags"]
         @ecppCompiler = makeRules["ecppCompiler"]
