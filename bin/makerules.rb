@@ -109,7 +109,6 @@ class MakeRules
         makeRules["ecppCompiler"] = @ecppCompiler
         makeRules["ecppFlags"] = @ecppFlags
         makeRules["hFiles"] = @hFiles
-        makeRules["cppFiles"] = @cppFiles
         makeRules["ecppFiles"] = @ecppFiles
         makeRules["resourcesFiles"] = @resourcesFiles
         makeRules["extreDist"] = @extreDist
@@ -130,7 +129,6 @@ class MakeRules
         @ecppCompiler = makeRules["ecppCompiler"]
         @ecppFlags = makeRules["ecppFlags"]
         @hFiles = makeRules["hFiles"]
-        @cppFiles = makeRules["cppFiles"]
         @ecppFiles = makeRules["ecppFiles"]
         @resourcesFiles = makeRules["resourcesFiles"]
         @extreDist = makeRules["extreDist"]
