@@ -97,9 +97,15 @@ class TNTMakeManager
             objectFiles.push("#{@rules.buildDir}/resources.o")
         end
         for resourcesFile in @rules.resourcesFiles
-            puts "Check resources file: #{resourcesFile}"
-            if !File.exist?("resources.cpp") || File.mtime(resourcesFile) > File.mtime("resources.cpp")
-                puts "compile resources.cpp"
+            # no checks: The file names is not with real pathes...
+
+#             puts "Check resources file: #{resourcesFile}"
+#             puts "resourcesFile"
+#             puts File.mtime(resourcesFile)
+#             puts "resources.cpp"
+#             puts File.mtime("resources.cpp")
+#             if !File.exist?("resources.cpp") || File.mtime(resourcesFile) > File.mtime("resources.cpp")
+#                 puts "compile resources.cpp"
                 # all -> cpp
                 # compile resource files
                 ecpp_command ="#{@rules.ecppCompiler} #{@rules.ecppFlags} -bb -z -n resources -p -o #{@rules.buildDir}/resources  #{@rules.resourcesFiles.join(" ")}"
@@ -129,7 +135,7 @@ class TNTMakeManager
 
                 @isNewComplied = true
                 break
-            end
+#             end
         end
 
 
