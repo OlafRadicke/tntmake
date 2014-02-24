@@ -56,10 +56,13 @@ class TNTMakeManager
         puts "Will create if not exit: #{@rules.buildDir}"
         Dir.mkdir(@rules.buildDir) unless File.exists?(@rules.buildDir)
 
+        puts '#################################################################'
+        puts '                      HEADER TOUCH CHECK'
+        puts '#################################################################'
         # check header files
         for hFile in @rules.hFiles
             puts "check file: #{hFile}"
-            if File.exist?("#{@rules.buildDir}/#{@rules.binName}") && File.mtime("#{@rules.buildDir}/#{@rules.binName}") > File.mtime(hFile)
+            if File.exist?("#{@rules.buildDir}/#{@rules.binName}") && File.mtime("#{@rules.buildDir}/#{@rules.binName}") < File.mtime(hFile)
                 # if the execute file older than a header file than rebuild the
                 # complete project new.
                 puts "A header file is updated. call clean function an rebuild new."

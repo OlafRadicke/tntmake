@@ -24,8 +24,5 @@ install:
 	if [ ! -d /usr/lib/tntmake/ ] ; then  mkdir -p /usr/lib/tntmake/ ; fi;
 	install  bin/*.rb /usr/lib/tntmake/
 
-	if [ ! -d /usr/lib/tntmake/resources/ ] ; then  mkdir -p /usr/lib/tntmake/resources/ ; fi;
-	install  bin/resources/* /usr/lib/tntmake/resources/
-
 	if [ ! -d /usr/bin/ ] ; then  mkdir -p /usr/bin/ ; fi;
 	install  bin/tntmake /usr/bin/tntmake
