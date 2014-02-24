@@ -12,7 +12,8 @@ require 'fileutils'
 # Repräsentiert die Build-Konfiguration
 class MakeRules
 
-    attr_accessor :binName,
+    attr_accessor :tntmakeVersion,
+        :binName,
         :cppCompiler,
         :cppFlags,
         :cppLinkerFlags,
@@ -28,6 +29,11 @@ class MakeRules
     ##
     # Der Constructor der bei Ruby nicht Constructor heißt.
     def initialize
+
+        ##
+        # The version of tntmake that is create the configuration file.
+        # With this number it can check the compatibility of a configuration.
+        @tntmakeVersion = 1
 
         ## path to c++ compiler
         @cppCompiler = "g++"
@@ -84,13 +90,6 @@ class MakeRules
             @resourcesFiles.push( new_resourcesFiles )
         end
 
-        ## List of extra files. Config examples, docus.
-        @extreDist  = Array.new
-
-        ## add a file in the list of extra files files
-        def addExtreDistFiles( new_extreDist )
-            @extreDist.push( new_extreDist )
-        end
 
         ## using threads for builds y/n
         @useThread = false
@@ -101,6 +100,7 @@ class MakeRules
     def toJson()
 
         makeRules = Hash.new
+        makeRules["tntmakeVersion"] = @tntmakeVersion
         makeRules["binName"] = @binName
         makeRules["cppCompiler"] = @cppCompiler
         makeRules["cppFiles"] = @cppFiles
@@ -111,7 +111,6 @@ class MakeRules
         makeRules["hFiles"] = @hFiles
         makeRules["ecppFiles"] = @ecppFiles
         makeRules["resourcesFiles"] = @resourcesFiles
-        makeRules["extreDist"] = @extreDist
         makeRules["buildDir"] = @buildDir
 
         return JSON.generate(makeRules)
@@ -120,7 +119,7 @@ class MakeRules
     def loadJson( newJson )
 
         makeRules = JSON.parse( newJson )
-
+        @tntmakeVersion = makeRules["tntmakeVersion"]
         @binName = makeRules["binName"]
         @cppCompiler = makeRules["cppCompiler"]
         @cppFiles = makeRules["cppFiles"]
@@ -131,7 +130,6 @@ class MakeRules
         @hFiles = makeRules["hFiles"]
         @ecppFiles = makeRules["ecppFiles"]
         @resourcesFiles = makeRules["resourcesFiles"]
-        @extreDist = makeRules["extreDist"]
         @buildDir = makeRules["buildDir"]
 
     end

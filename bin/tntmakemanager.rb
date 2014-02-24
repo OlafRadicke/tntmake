@@ -33,7 +33,6 @@ class TNTMakeManager
         # ./SubMakefile.am.template
         substituts_2 = Hash.new(0)
         substituts_2["BINFILE"] = @rules.binName
-        substituts_2["EXTRA_DIST"] = @rules.extreDist.join("\\\n")
         substituts_2["HEADERS"] = @rules.hFiles.join("\\\n")
         substituts_2["ECPPFILES"] = @rules.ecppFiles.join("\\\n")
         substituts_2["RESOURCES"] = @rules.resourcesFiles.join("\\\n")
