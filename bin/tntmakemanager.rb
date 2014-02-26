@@ -89,7 +89,7 @@ class TNTMakeManager
         thrArrayECPP.each { |thr| thr.join }
 
         puts '#################################################################'
-        puts '                ENDE DES ERSTEN THREAD-DURCHLAUF'
+        puts '                   ENDE DES ERSTEN DURCHLAUF'
         puts '#################################################################'
 
         # compiled resources
@@ -99,17 +99,27 @@ class TNTMakeManager
         for resourcesFile in @rules.resourcesFiles
             # no checks: The file names is not with real pathes...
 
-#             puts "Check resources file: #{resourcesFile}"
-#             puts "resourcesFile"
-#             puts File.mtime(resourcesFile)
-#             puts "resources.cpp"
-#             puts File.mtime("resources.cpp")
-#             if !File.exist?("resources.cpp") || File.mtime(resourcesFile) > File.mtime("resources.cpp")
-#                 puts "compile resources.cpp"
+            puts "====================== xxx -> cpp? ========================"
+            if File.exist?("#{@rules.buildDir}/resources.cpp")
+                puts "Check resources file: \n"
+                puts "#{@rules.resourcesRoot}#{resourcesFile} \n"
+                puts File.mtime("#{@rules.resourcesRoot}#{resourcesFile}")
+                puts "#{@rules.buildDir}/resources.cpp"
+                puts File.mtime("#{@rules.buildDir}/resources.cpp")
+            end
+
+            if !File.exist?("#{@rules.buildDir}/resources.o") || \
+                    File.mtime("#{@rules.resourcesRoot}#{resourcesFile}") > \
+                    File.mtime("#{@rules.buildDir}/resources.cpp")
+                puts "compile resources.cpp now...."
                 # all -> cpp
                 # compile resource files
-                ecpp_command ="#{@rules.ecppCompiler} #{@rules.ecppFlags} -bb -z -n resources -p -o #{@rules.buildDir}/resources  #{@rules.resourcesFiles.join(" ")}"
-                puts "(re-) compiling resources: \n"
+                ecpp_command = "#{@rules.ecppCompiler} #{@rules.ecppFlags} "
+                ecpp_command += "-bb -z -n resources -p -o "
+                ecpp_command += "#{@rules.buildDir}/resources  "
+                ecpp_command += "#{@rules.resourcesFiles.join(" ")}"
+                puts "(re-) compiling resources... \n"
+                puts "====================== step 1  ========================"
                 puts ecpp_command
 #                 puts @rules.resourcesFiles
                 exit_code = system(ecpp_command)
@@ -121,7 +131,11 @@ class TNTMakeManager
                     raise 'compiling failed'
                 end
 
-                p_command = "#{@rules.cppCompiler} #{@rules.cppFlags} -o #{@rules.buildDir}/resources.o  #{@rules.buildDir}/resources.cpp "
+                p_command = "#{@rules.cppCompiler} #{@rules.cppFlags} "
+                p_command += "-o #{@rules.buildDir}/resources.o  "
+                p_command += "#{@rules.buildDir}/resources.cpp "
+
+                puts "====================== step 2  ========================"
                 puts p_command
 
                 exit_code = system(p_command)
@@ -135,8 +149,11 @@ class TNTMakeManager
 
                 @isNewComplied = true
                 break
-#             end
+            end
         end
+        puts '#################################################################'
+        puts '                    ENDE DES ZWEITEN TEIL'
+        puts '#################################################################'
 
 
         # compile cpp files
@@ -155,7 +172,7 @@ class TNTMakeManager
         thrArrayCPP.each { |thr| thr.join }
 
         puts '#################################################################'
-        puts '                ENDE DES ZWEITEN THREAD-DURCHLAUF'
+        puts '                    ENDE DES DRITTEN TEIL'
         puts '#################################################################'
 
         puts "linking programm"
@@ -168,7 +185,12 @@ class TNTMakeManager
             puts "#{linkingCommand}"
             raise 'compiling failed'
         end
-        puts "#{@rules.buildDir}/#{@rules.binName} is created!"
+
+        puts '#################################################################'
+        puts "          #{@rules.buildDir}/#{@rules.binName} is created!"
+        puts "                            END!"
+        puts '#################################################################'
+
     end
 
     ## compile ecpp files

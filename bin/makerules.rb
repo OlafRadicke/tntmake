@@ -23,6 +23,7 @@ class MakeRules
         :cppFiles,
         :ecppFiles,
         :resourcesFiles,
+        :resourcesRoot,
         :buildDir,
         :useThread
 
@@ -90,6 +91,8 @@ class MakeRules
             @resourcesFiles.push( new_resourcesFiles )
         end
 
+        ## Path to resources root directory. "./src" for example.
+        @resourcesRoot = "./src/"
 
         ## using threads for builds y/n
         @useThread = false
@@ -111,6 +114,7 @@ class MakeRules
         makeRules["hFiles"] = @hFiles
         makeRules["ecppFiles"] = @ecppFiles
         makeRules["resourcesFiles"] = @resourcesFiles
+        makeRules["resourcesRoot"] = @resourcesRoot
         makeRules["buildDir"] = @buildDir
 
         return JSON.generate(makeRules)
@@ -130,6 +134,7 @@ class MakeRules
         @hFiles = makeRules["hFiles"]
         @ecppFiles = makeRules["ecppFiles"]
         @resourcesFiles = makeRules["resourcesFiles"]
+        @resourcesRoot = makeRules["resourcesRoot"]
         @buildDir = makeRules["buildDir"]
 
     end
