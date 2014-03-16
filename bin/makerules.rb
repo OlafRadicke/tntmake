@@ -1,7 +1,6 @@
 #!/usr/bin/ruby -w
 
 require 'yaml'
-require 'mustache'
 require 'fileutils'
 
 

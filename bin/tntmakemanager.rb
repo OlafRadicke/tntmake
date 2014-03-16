@@ -1,6 +1,5 @@
 require 'yaml'
 require 'json'
-require 'mustache'
 require 'fileutils'
 
 ##

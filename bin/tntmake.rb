@@ -2,7 +2,6 @@
 
 
 require 'yaml'
-require 'mustache'
 require 'fileutils'
 
 
