@@ -24,8 +24,8 @@ Create a autotool based build system for tntnet projects.
 if [ ! -d $RPM_BUILD_ROOT/usr/lib/tntmake/ ] ; then  mkdir -p $RPM_BUILD_ROOT/usr/lib/tntmake/ ; fi;
 install  $RPM_BUILD_DIR/%{name}-%{version}/bin/*.rb $RPM_BUILD_ROOT/usr/lib/tntmake/
 
-if [ ! -d $RPM_BUILD_ROOT/usr/lib/tntmake/resources/ ] ; then  mkdir -p $RPM_BUILD_ROOT/usr/lib/tntmake/resources/ ; fi;
-install  $RPM_BUILD_DIR/%{name}-%{version}/bin/resources/* $RPM_BUILD_ROOT/usr/lib/tntmake/resources/
+# if [ ! -d $RPM_BUILD_ROOT/usr/lib/tntmake/resources/ ] ; then  mkdir -p $RPM_BUILD_ROOT/usr/lib/tntmake/resources/ ; fi;
+# install  $RPM_BUILD_DIR/%{name}-%{version}/bin/resources/* $RPM_BUILD_ROOT/usr/lib/tntmake/resources/
 
 if [ ! -d $RPM_BUILD_ROOT/usr/bin/ ] ; then  mkdir -p $RPM_BUILD_ROOT/usr/bin/ ; fi;
 install  $RPM_BUILD_DIR/%{name}-%{version}/bin/tntmake $RPM_BUILD_ROOT/usr/bin/tntmake
