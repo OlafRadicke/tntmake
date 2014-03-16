@@ -1,13 +1,13 @@
 Name: tntmake
 Summary: Create a autotool based build system for tntnet projects.
-Version: 1
+Version: 2
 Group: develop
 License: GPL
 Release: 1
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-olaf
 BuildArch: noarch
 Source: %{name}-%{version}.tar.gz
-Requires: tntnet rubygem-mustache
+Requires: tntnet
 Vendor: Olaf Radicke
 Packager: Olaf Radicke briefkasten@olaf-radicke.de
 
