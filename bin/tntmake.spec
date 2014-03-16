@@ -7,7 +7,7 @@ Release: 1
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-olaf
 BuildArch: noarch
 Source: %{name}-%{version}.tar.gz
-Requires: tntnet
+Requires: tntnet rubygem-mustache
 Vendor: Olaf Radicke
 Packager: Olaf Radicke briefkasten@olaf-radicke.de
 
