@@ -1,4 +1,4 @@
-VERSION=5
+VERSION=6
 RPMNAME=tntmake
 
 clean:
