@@ -1,6 +1,6 @@
 Name: tntmake
 Summary: A very simple to use build system for tntnet projects.
-Version: 3
+Version: 4
 Group: develop
 License: GPL
 Release: 1
@@ -33,6 +33,8 @@ install  $RPM_BUILD_DIR/%{name}-%{version}/bin/tntmake $RPM_BUILD_ROOT/usr/bin/t
 /usr/bin/tntmake
 
 %changelog
+* Thu Mar 20 2014 briefkasten@olaf-radicke - 4
+ - Bugfixing version.
 * Thu Mar 20 2014 briefkasten@olaf-radicke - 3
  - Reimplementation in python.
 * Tue Jan 21 2014 briefkasten@olaf-radicke - 1

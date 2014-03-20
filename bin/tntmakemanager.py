@@ -88,7 +88,7 @@ class TNTMakeManager:
                 print "====================== step 1  ========================\n"
                 print ecpp_command
 
-                if self.doCLI( ecpp_command ) :
+                if not self.doCLI( ecpp_command ) :
                     #raise 'compiling failed'
                     exit()
 
@@ -99,7 +99,7 @@ class TNTMakeManager:
                 print "====================== step 2  ========================\n"
                 print p_command
 
-                if self.doCLI( p_command ) :
+                if not self.doCLI( p_command ) :
                     #raise 'compiling failed'
                     exit()
 
@@ -132,7 +132,7 @@ class TNTMakeManager:
         seperator = " "
         linkingCommand +=  self.rules.binName + " " + seperator.join( objectFiles )
 
-        if self.doCLI( linkingCommand ) :
+        if not self.doCLI( linkingCommand ) :
             #raise 'compiling failed'
             exit()
 
@@ -154,7 +154,7 @@ class TNTMakeManager:
             ecpp_command += self.rules.ecppFlags + " -o " + fileName + "  " + fileName
             output += "command: " + ecpp_command
 
-            if self.doCLI( ecpp_command ) :
+            if not self.doCLI( ecpp_command ) :
                 #raise 'compiling failed'
                 exit()
 
@@ -163,7 +163,7 @@ class TNTMakeManager:
             cpp_command += " -o " + fileName + ".o " + fileName + ".cpp"
             output += "command: " + cpp_command
 
-            if self.doCLI( cpp_command ) :
+            if not self.doCLI( cpp_command ) :
                 #raise 'compiling failed'
                 exit()
 
@@ -186,7 +186,7 @@ class TNTMakeManager:
             cpp_command =  self.rules.cppCompiler + " " + self.rules.cppFlags + " -o " + fileName + ".o " + fileName
             output +=  cpp_command
 
-            if self.doCLI( cpp_command ) :
+            if not self.doCLI( cpp_command ) :
                 #raise 'compiling failed'
                 exit()
 
@@ -212,6 +212,7 @@ class TNTMakeManager:
     ##
     # remove the tntmake generated files (*.o *.c_tmp)
     def clean(self):
+        print "Start clean process...\n"
         cleanFiles = []
 
         for ecppFile in self.rules.ecppFiles:
@@ -223,22 +224,24 @@ class TNTMakeManager:
 
         seperator = " "
         cleanCommand = "rm -f  " + seperator.join( cleanFiles )
-
-        if self.doCLI( cleanCommand ) :
-            #raise 'compiling failed'
-            exit()
-
-        cleanCommand = "rm -fr  " + self.rules.buildDir
-
-        if self.doCLI( cleanCommand ) :
-            #raise 'compiling failed'
-            exit()
-
-        print "Remove: \n"
+        print "Will remove: \n"
         for fileName in cleanFiles:
             print fileName
 
+        if not self.doCLI( cleanCommand ) :
+            #raise 'compiling failed'
+            exit()
+
+        print "Will remove: \n"
         print self.rules.buildDir
+        cleanCommand = "rm -fr  " + self.rules.buildDir
+
+        if not self.doCLI( cleanCommand ) :
+            #raise 'compiling failed'
+            exit()
+
+        print "...ready \n"
+
 
     def cleanBuildDir(self):
         if os.path.isfile( self.buildDir ):
