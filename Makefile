@@ -1,4 +1,4 @@
-VERSION=2
+VERSION=3
 RPMNAME=tntmake
 
 clean:
@@ -22,7 +22,7 @@ dist-rpm: dirbuild dist-tar
 
 install:
 	if [ ! -d /usr/lib/tntmake/ ] ; then  mkdir -p /usr/lib/tntmake/ ; fi;
-	install  bin/*.rb /usr/lib/tntmake/
+	install  bin/*.py /usr/lib/tntmake/
 
 	if [ ! -d /usr/bin/ ] ; then  mkdir -p /usr/bin/ ; fi;
 	install  bin/tntmake /usr/bin/tntmake
