@@ -259,7 +259,8 @@ class TNTMakeManager:
             stdout=subprocess.PIPE, \
             stderr=subprocess.PIPE, \
             close_fds=True)
-        if len( proc.stderr.read() ) != 0:
+        proc.wait()
+        if proc.returncode != 0:
             print "exit code : [" + proc.stderr.read() + "]"
             print "compiling command failed:"
             print  command + "\n"
@@ -278,7 +279,8 @@ class TNTMakeManager:
             stdout=subprocess.PIPE, \
             stderr=subprocess.PIPE, \
             close_fds=True)
-        if len( proc.stderr.read() ) != 0:
+        proc.wait()
+        if proc.returncode != 0:
             print "exit code : [" + proc.stderr.read() + "]"
             print "compiling command failed:"
             print  command + "\n"
