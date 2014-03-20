@@ -1,2 +1,2 @@
 #!/bin/bash
-/usr/bin/python -W /usr/lib/tntmake/tntmake.py $*
+/usr/bin/python /usr/lib/tntmake/tntmake.py $*
