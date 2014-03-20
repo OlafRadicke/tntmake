@@ -21,9 +21,9 @@ class TNTMakeManager:
             print "create " + self.rules.buildDir
             os.makedirs( self.rules.buildDir )
 
-        print '#################################################################'
-        print '                      HEADER TOUCH CHECK'
-        print '#################################################################'
+        print '#################################################################\n'
+        print '                      HEADER TOUCH CHECK\n'
+        print '#################################################################\n'
         # check header files
         for hFile in self.rules.hFiles:
             print "check file: " + hFile
@@ -54,9 +54,9 @@ class TNTMakeManager:
         #for thr in thrArrayECPP:
             #thr.join()
 
-        print '#################################################################'
-        print '                   ENDE DES ERSTEN DURCHLAUF'
-        print '#################################################################'
+        print '#################################################################\n'
+        print '                   ENDE DES ERSTEN DURCHLAUF\n'
+        print '#################################################################\n'
 
         # compiled resources
         if len( self.rules.resourcesFiles ) > 0:
@@ -65,7 +65,7 @@ class TNTMakeManager:
         for resourcesFile in self.rules.resourcesFiles:
             # no checks: The file names is not with real pathes...
 
-            print "====================== xxx -> cpp? ========================"
+            print "====================== xxx -> cpp? ========================\n"
             if os.path.isfile( self.rules.buildDir + "/resources.cpp" ):
                 print "Check resources file: \n"
                 print  self.rules.resourcesRoot  + resourcesFile + " \n"
@@ -84,7 +84,7 @@ class TNTMakeManager:
                 seperator = " "
                 ecpp_command +=  seperator.join( self.rules.resourcesFiles )
                 print "(re-) compiling resources... \n"
-                print "====================== step 1  ========================"
+                print "====================== step 1  ========================\n"
                 print ecpp_command
 
                 (cli_in, cli_out, cli_err) = os.popen3( ecpp_command )
@@ -99,7 +99,7 @@ class TNTMakeManager:
                 p_command += "-o " + self.rules.buildDir + "/resources.o  "
                 p_command +=  self.rules.buildDir + "/resources.cpp "
 
-                print "====================== step 2  ========================"
+                print "====================== step 2  ========================\n"
                 print p_command
 
                 (cli_in, cli_out, cli_err) = os.popen3( p_command )
@@ -113,8 +113,8 @@ class TNTMakeManager:
                 break
 
         print '#################################################################'
-        print '                    ENDE DES ZWEITEN TEIL'
-        print '#################################################################'
+        print '                    ENDE DES ZWEITEN TEIL\n'
+        print '#################################################################\n'
         # compile cpp files
         #thrArrayCPP = []
         for cppFile in self.rules.cppFiles:
@@ -128,9 +128,9 @@ class TNTMakeManager:
                 # without threading
                 self.compileCppFiles( cppFile )
         #thrArrayCPP.each { |thr| thr.join  + "
-        print '#################################################################'
-        print '                    ENDE DES DRITTEN TEIL'
-        print '#################################################################'
+        print '#################################################################\n'
+        print '                    ENDE DES DRITTEN TEIL\n'
+        print '#################################################################\n'
         print "linking programm"
         linkingCommand =  self.rules.cppCompiler
         linkingCommand += " " + self.rules.cppLinkerFlags
@@ -145,20 +145,20 @@ class TNTMakeManager:
             #raise 'compiling failed'
             exit()
 
-        print '#################################################################'
+        print '#################################################################\n'
         print "          " + self.rules.buildDir + "/" + self.rules.binName + " is created!"
         print "                            END!"
-        print '#################################################################'
+        print '#################################################################\n'
 
 
     ## compile ecpp files
     def compileEcppFiles(self, fileName ):
-        output = []
+        output = ""
         ## if *.cpp older than *.ecpp
         if  not os.path.isfile( fileName + ".cpp") \
             or not os.path.isfile( fileName + ".o") \
             or os.path.getmtime( fileName ) > os.path.getmtime( fileName + ".cpp"):
-            output += "##################### ecpp -> cpp ########################"
+            output += "##################### ecpp -> cpp ########################\n"
             ecpp_command =  self.rules.ecppCompiler + " "
             ecpp_command += self.rules.ecppFlags + " -o " + fileName + "  " + fileName
             output += "command: " + ecpp_command
@@ -171,7 +171,7 @@ class TNTMakeManager:
                 #raise 'compiling failed'
                 exit()
 
-            output += "====================== cpp -> o ========================"
+            output += "\n====================== cpp -> o ========================\n"
             cpp_command =  self.rules.cppCompiler + " " + self.rules.cppFlags
             cpp_command += " -o " + fileName + ".o " + fileName + ".cpp"
             output += "command: " + cpp_command
@@ -192,12 +192,12 @@ class TNTMakeManager:
 
     ## compiled cpp files
     def compileCppFiles(self, fileName ):
-        output = []
+        output = ""
         # if *.cpp older than *.cpp.o
         if not os.path.isfile( fileName + ".o" ) \
             or os.path.getmtime( fileName ) > os.path.getmtime( fileName + ".o" ):
 
-            output += "====================== cpp -> o ========================"
+            output += "====================== cpp -> o ========================\n"
             output += "compile  " + fileName
             cpp_command =  self.rules.cppCompiler + " " + self.rules.cppFlags + " -o " + fileName + ".o " + fileName
             output +=  cpp_command
@@ -260,7 +260,7 @@ class TNTMakeManager:
     ##
     # remove the tntmake generated files (*.o *.c_tmp)
     def clean(self):
-        cleanFiles = array()
+        cleanFiles = []
 
         for ecppFile in self.rules.ecppFiles:
             cleanFiles.append( ecppFile + ".o")
@@ -289,7 +289,9 @@ class TNTMakeManager:
             exit()
 
         print "Remove: \n"
-        print cleanFiles
+        for fileName in cleanFiles:
+            print fileName
+
         print self.rules.buildDir
 
     def cleanBuildDir(self):

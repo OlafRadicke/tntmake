@@ -22,7 +22,13 @@ dist-rpm: dirbuild dist-tar
 
 install:
 	if [ ! -d /usr/lib/tntmake/ ] ; then  mkdir -p /usr/lib/tntmake/ ; fi;
-	install  bin/*.py /usr/lib/tntmake/
+	cp  bin/*.py /usr/lib/tntmake/
 
 	if [ ! -d /usr/bin/ ] ; then  mkdir -p /usr/bin/ ; fi;
-	install  bin/tntmake /usr/bin/tntmake
+	cp  bin/tntmake /usr/bin/tntmake
+
+
+
+uninstall:
+	rm -Rvf /usr/lib/tntmake
+	rm -Rvf /usr/bin/tntmake

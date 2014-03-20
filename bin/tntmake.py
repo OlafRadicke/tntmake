@@ -20,12 +20,13 @@ def helpText():
     --build -b
         Try to read Makefil.tnt an build the binary file.
 
-    --thread-build -tb
-        Try to read Makefil.tnt an build the binary file.
-
     --convert-autotools -am
         it is reading the Makefile.tnt generated the autotools files.
     """
+
+    #--thread-build -tb
+        #Try to read Makefil.tnt an build the binary file.
+
 
 ##
 # Billiger Komandozeilenparser. Geht bestimmt besser.
@@ -36,7 +37,6 @@ def argParse():
         i += 1
         if i == 1:
             continue
-        print "a: " + a
         if a == "--example" or a == "-e":
             tntmakeManager = tntmakemanager.TNTMakeManager()
             print tntmakeManager.getExampleConfigFile()
@@ -61,16 +61,16 @@ def argParse():
             tntmakeManager = tntmakemanager.TNTMakeManager()
             tntmakeManager.rules = makeRules
             tntmakeManager.buildRun()
-        elif a == "--thread-build" or a == "-tb":
-            f = open('Makefile.tnt', 'r+')
-            makeRules = makerules.MakeRules()
-            makeRules.loadJson( f.read() )
-            f.close()
-            makeRules.useThread = true
+        #elif a == "--thread-build" or a == "-tb":
+            #f = open('Makefile.tnt', 'r+')
+            #makeRules = makerules.MakeRules()
+            #makeRules.loadJson( f.read() )
+            #f.close()
+            #makeRules.useThread = true
 
-            tntmakeManager = tntmakemanager.TNTMakeManager()
-            tntmakeManager.rules = makeRules
-            tntmakeManager.buildRun()
+            #tntmakeManager = tntmakemanager.TNTMakeManager()
+            #tntmakeManager.rules = makeRules
+            #tntmakeManager.buildRun()
         elif a == "--help" or a == "-h":
             helpText()
         else:

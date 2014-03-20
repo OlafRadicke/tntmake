@@ -50,8 +50,6 @@ class MakeRules:
 
     def loadJson( self, newJson ):
         makeRules = json.loads( newJson )
-        print "makeRules: "
-        print makeRules
         self.tntmakeVersion = makeRules["tntmakeVersion"]
         self.binName = makeRules["binName"]
         self.cppCompiler = makeRules["cppCompiler"]
