@@ -2,6 +2,7 @@
 import os.path
 import makerules
 import shutil
+import subprocess
 
 ##
 # Make processor
@@ -87,11 +88,7 @@ class TNTMakeManager:
                 print "====================== step 1  ========================\n"
                 print ecpp_command
 
-                (cli_in, cli_out, cli_err) = os.popen3( ecpp_command )
-                if len( cli_err.read() ) != 0:
-                    print "exit code : [" + cli_err + "]"
-                    print "compiling command failed:"
-                    print  ecpp_command
+                if self.doCLI( ecpp_command ) :
                     #raise 'compiling failed'
                     exit()
 
@@ -102,12 +99,9 @@ class TNTMakeManager:
                 print "====================== step 2  ========================\n"
                 print p_command
 
-                (cli_in, cli_out, cli_err) = os.popen3( p_command )
-                if len( cli_err.read() ) != 0:
-                    print "exit code : [" + cli_err.read() + "]"
-                    print "compiling command failed:"
-                    print  p_command
-                    raise 'compiling failed'
+                if self.doCLI( p_command ) :
+                    #raise 'compiling failed'
+                    exit()
 
                 self.isNewComplied = True
                 break
@@ -138,10 +132,7 @@ class TNTMakeManager:
         seperator = " "
         linkingCommand +=  self.rules.binName + " " + seperator.join( objectFiles )
 
-        (cli_in, cli_out, cli_err) = os.popen3( linkingCommand )
-        if len( cli_err.read() ) != 0 :
-            print "compiling command failed:"
-            print  linkingCommand
+        if self.doCLI( linkingCommand ) :
             #raise 'compiling failed'
             exit()
 
@@ -163,11 +154,7 @@ class TNTMakeManager:
             ecpp_command += self.rules.ecppFlags + " -o " + fileName + "  " + fileName
             output += "command: " + ecpp_command
 
-            (cli_in, cli_out, cli_err) = os.popen3( ecpp_command )
-            if len( cli_err.read() ) != 0 :
-                print "exit code : [" + cli_err.read() + "]"
-                print "compiling command failed:"
-                print  ecpp_command
+            if self.doCLI( ecpp_command ) :
                 #raise 'compiling failed'
                 exit()
 
@@ -176,13 +163,10 @@ class TNTMakeManager:
             cpp_command += " -o " + fileName + ".o " + fileName + ".cpp"
             output += "command: " + cpp_command
 
-            (cli_in, cli_out, cli_err) = os.popen3( cpp_command )
-            if len( cli_err.read() ) != 0 :
-                print "exit code : [" + cli_err.read() + "]"
-                print "compiling command failed:"
-                print  cpp_command
+            if self.doCLI( cpp_command ) :
                 #raise 'compiling failed'
-                exit
+                exit()
+
             self.isNewComplied = True
         else:
             output += "skip: " + fileName
@@ -202,10 +186,7 @@ class TNTMakeManager:
             cpp_command =  self.rules.cppCompiler + " " + self.rules.cppFlags + " -o " + fileName + ".o " + fileName
             output +=  cpp_command
 
-            (cli_in, cli_out, cli_err) = os.popen3( cpp_command )
-            if len( cli_err.read() ) != 0 :
-                print "compiling command failed:"
-                print  cpp_command
+            if self.doCLI( cpp_command ) :
                 #raise 'compiling failed'
                 exit()
 
@@ -221,39 +202,10 @@ class TNTMakeManager:
     def scanSourceDirs(self):
 
         makeRules = makerules.MakeRules()
-
-        (cli_in, cli_out, cli_err) = os.popen3("find ./ -name '*.h'")
-        fileList = cli_out.read()
-        makeRules.hFiles = fileList.split("\n")
-        if len( cli_err.read() ) != 0:
-            print "---ERROR---"
-            print cli_err.read()
-            exit()
-
-        (cli_in, cli_out, cli_err) = os.popen3("find ./ -name '*.cpp'")
-        fileList = cli_out.read()
-        makeRules.cppFiles = fileList.split("\n")
-        if len( cli_err.read() ) != 0:
-            print "---ERROR---"
-            print cli_err.read()
-            exit()
-
-        (cli_in, cli_out, cli_err) = os.popen3("find ./ -name '*.ecpp'")
-        fileList = cli_out.read()
-        makeRules.ecppFiles = fileList.split("\n")
-        if len( cli_err.read() ) != 0:
-            print "---ERROR---"
-            print cli_err.read()
-            exit()
-
-
-        (cli_in, cli_out, cli_err) = os.popen3( "find `find ./ -name '*resource*'` -type f")
-        fileList = cli_out.read()
-        makeRules.resourcesFiles = fileList.split("\n")
-        if len( cli_err.read() ) != 0:
-            print "---ERROR---"
-            exit()
-
+        makeRules.hFiles = self.getFileList( "find ./ -name '*.h'" )
+        makeRules.cppFiles = self.getFileList( "find ./ -name '*.cpp'" )
+        makeRules.ecppFiles = self.getFileList( "find ./ -name '*.ecpp'" )
+        makeRules.resourcesFiles = self.getFileList( "find `find ./ -name '*resource*'` -type f" )
         return makeRules.toJson()
 
 
@@ -272,19 +224,13 @@ class TNTMakeManager:
         seperator = " "
         cleanCommand = "rm -f  " + seperator.join( cleanFiles )
 
-        (cli_in, cli_out, cli_err) = os.popen3( cleanCommand )
-        if len( cli_err.read() ) != 0 :
-            print "\n compiling command failed: \n"
-            print "\n " + cleanCommand
+        if self.doCLI( cleanCommand ) :
             #raise 'compiling failed'
             exit()
 
         cleanCommand = "rm -fr  " + self.rules.buildDir
 
-        (cli_in, cli_out, cli_err) = os.popen3( cleanCommand )
-        if len( cli_err.read() ) != 0 :
-            print "\n compiling command failed: \n"
-            print "\n " + cleanCommand
+        if self.doCLI( cleanCommand ) :
             #raise 'compiling failed'
             exit()
 
@@ -300,3 +246,40 @@ class TNTMakeManager:
             os.makedirs( self.buildDir )
         else:
             os.makedirs( self.buildDir )
+
+    ##
+    # Call a bash command. It get True if all okay.
+    def doCLI(self, command ):
+        proc = subprocess.Popen( command , \
+            shell=True, \
+            stdin=subprocess.PIPE, \
+            stdout=subprocess.PIPE, \
+            stderr=subprocess.PIPE, \
+            close_fds=True)
+        if len( proc.stderr.read() ) != 0:
+            print "exit code : [" + proc.stderr.read() + "]"
+            print "compiling command failed:"
+            print  command + "\n"
+            return False
+        else:
+            return True
+
+
+    ##
+    # Call a bash command. get back result as list.
+    # If cli throw a error than call exit function.
+    def getFileList(self, command ):
+        proc = subprocess.Popen( command , \
+            shell=True, \
+            stdin=subprocess.PIPE, \
+            stdout=subprocess.PIPE, \
+            stderr=subprocess.PIPE, \
+            close_fds=True)
+        if len( proc.stderr.read() ) != 0:
+            print "exit code : [" + proc.stderr.read() + "]"
+            print "compiling command failed:"
+            print  command + "\n"
+            exit()
+        else:
+            fileList = proc.stdout.read()
+            return fileList.split("\n")
