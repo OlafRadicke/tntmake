@@ -144,24 +144,23 @@ class TNTMakeManager:
 
     ## compile ecpp files
     def compileEcppFiles(self, fileName ):
-        output = ""
         ## if *.cpp older than *.ecpp
         if  not os.path.isfile( fileName + ".cpp") \
             or not os.path.isfile( fileName + ".o") \
             or os.path.getmtime( fileName ) > os.path.getmtime( fileName + ".cpp"):
-            output += "##################### ecpp -> cpp ########################\n"
+            print  "##################### ecpp -> cpp ########################\n"
             ecpp_command =  self.rules.ecppCompiler + " "
             ecpp_command += self.rules.ecppFlags + " -o " + fileName + "  " + fileName
-            output += "command: " + ecpp_command
+            print  "command: " + ecpp_command
 
             if not self.doCLI( ecpp_command ) :
                 #raise 'compiling failed'
                 exit()
 
-            output += "\n====================== cpp -> o ========================\n"
+            print  "\n====================== cpp -> o ========================\n"
             cpp_command =  self.rules.cppCompiler + " " + self.rules.cppFlags
             cpp_command += " -o " + fileName + ".o " + fileName + ".cpp"
-            output += "command: " + cpp_command
+            print  "command: " + cpp_command
 
             if not self.doCLI( cpp_command ) :
                 #raise 'compiling failed'
@@ -169,22 +168,20 @@ class TNTMakeManager:
 
             self.isNewComplied = True
         else:
-            output += "skip: " + fileName
-            output += "`ls -lah " + fileName + "*`"
-        print output
+            print  "skip: " + fileName
+            print  "`ls -lah " + fileName + "*`"
 
 
     ## compiled cpp files
     def compileCppFiles(self, fileName ):
-        output = ""
         # if *.cpp older than *.cpp.o
         if not os.path.isfile( fileName + ".o" ) \
             or os.path.getmtime( fileName ) > os.path.getmtime( fileName + ".o" ):
 
-            output += "====================== cpp -> o ========================\n"
-            output += "compile  " + fileName
+            print  "====================== cpp -> o ========================\n"
+            print  "compile  " + fileName
             cpp_command =  self.rules.cppCompiler + " " + self.rules.cppFlags + " -o " + fileName + ".o " + fileName
-            output +=  cpp_command
+            print   cpp_command
 
             if not self.doCLI( cpp_command ) :
                 #raise 'compiling failed'
@@ -193,10 +190,9 @@ class TNTMakeManager:
             self.isNewComplied = True
 
         else:
-            output += "skip " + fileName
-            output += "`ls -lah " + fileName + ".o " + fileName + " "
-            output += fileName + ".o`"
-        print output
+            print  "skip " + fileName
+            print  "`ls -lah " + fileName + ".o " + fileName + " "
+            print  fileName + ".o`"
 
 
     def scanSourceDirs(self):
