@@ -150,7 +150,7 @@ class TNTMakeManager:
             or os.path.getmtime( fileName ) > os.path.getmtime( fileName + ".cpp"):
             print  "##################### ecpp -> cpp ########################\n"
             ecpp_command =  self.rules.ecppCompiler + " "
-            ecpp_command += self.rules.ecppFlags + " -o " + fileName + "  " + fileName
+            ecpp_command += self.rules.ecppFlags + " -o " + fileName + ".cpp  " + fileName
             print  "command: " + ecpp_command
 
             if not self.doCLI( ecpp_command ) :
